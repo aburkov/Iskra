@@ -12,6 +12,7 @@ MDWiki is a simple wiki system that uses Markdown files for content.
 - LaTeX math support: $E = mc^2$
 - Section navigation
 - GitHub integration
+- GitHub integration 2
 
 $$
 E = mc^2
