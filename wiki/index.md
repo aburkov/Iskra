@@ -28,7 +28,7 @@ $$
 E = mc^2
 $$
 
-![decoder-block-3-MoE drawio](https://github.com/user-attachments/assets/e2746e96-0e60-4946-8106-e44bfea8b806)
+![decoder-block-3-MoE drawio](https://github.com/user-attachments/assets/e2746e96-0e60-4946-8106-e44bfea8b806#center)
 
 - Markdown support
 - LaTeX math support: $E = mc^2$
