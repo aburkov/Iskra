@@ -4,7 +4,7 @@ This is a modern implementation of MDWiki using React.
 
 ## Introduction
 
-MDWiki is a simple wiki system that uses Markdown files for content.
+MDWiki is a simple wiki system that uses Markdown files for content. Here's an article about [transformer](transformer.md).
 
 ## Features
 
