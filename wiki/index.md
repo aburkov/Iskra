@@ -41,6 +41,20 @@ $$
 E = mc^2
 $$
 
+```python
+from collections import defaultdict
+
+def initialize_vocabulary(corpus):
+    vocabulary = defaultdict(int)
+    charset = set()
+    for word in corpus:
+        word_with_marker = '_' + word ➊
+        characters = list(word_with_marker) ➋
+        charset.update(characters) ➌
+        tokenized_word = ' '.join(characters) ➍
+        vocabulary[tokenized_word] += 1 ➎
+    return vocabulary, charset
+```
 
 - Markdown support
 - LaTeX math support: $E = mc^2$
