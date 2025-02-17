@@ -48,11 +48,11 @@ def initialize_vocabulary(corpus):
     vocabulary = defaultdict(int)
     charset = set()
     for word in corpus:
-        word_with_marker = '_' + word ➊
-        characters = list(word_with_marker) ➋
-        charset.update(characters) ➌
-        tokenized_word = ' '.join(characters) ➍
-        vocabulary[tokenized_word] += 1 ➎
+        word_with_marker = '_' + word
+        characters = list(word_with_marker)
+        charset.update(characters)
+        tokenized_word = ' '.join(characters)
+        vocabulary[tokenized_word] += 1
     return vocabulary, charset
 ```
 
