@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Unrotated background -->
+  <rect x="10" y="10" width="80" height="80" fill="#2C3E50" />
+  
+  <defs>
+    <!-- Define the tail shape -->
+    <polygon id="tail" points="65,45 80,44 95,45 80,46" fill="#FF7F00" />
+  </defs>
+  
+  <!-- Rotated group: moved 15% right (+15) and up (-15) -->
+  <g transform="translate(15,-15) rotate(120 50 50)">
+    <!-- Rotate the star 10° around (65,45) -->
+    <g transform="rotate(10 65 45)">
+      <path
+        d="M50,35 
+           L54,45 
+           L65,45 
+           L57,52 
+           L60,63 
+           L50,57 
+           L40,63 
+           L43,52 
+           L35,45 
+           L46,45 
+           Z"
+        fill="#F39C12"
+      />
+    </g>
+    <!-- Three tails moved along with the star -->
+    <use href="#tail" transform="rotate(-15 65 45)" />
+    <use href="#tail" transform="rotate(0 65 45)" />
+    <use href="#tail" transform="rotate(15 65 45)" />
+  </g>
+</svg>
