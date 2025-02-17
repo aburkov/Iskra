@@ -66,6 +66,18 @@ $$
 E = mc^2
 $$
 
+| Doc | Text                                | Class ID | Class Name |
+|-----|-------------------------------------|-------|------------|
+| 1   | Movies are fun for everyone.        | 1     | Cinema     |
+| 2   | Watching movies is great fun.       | 1     | Cinema     |
+| 3   | Enjoy a great movie today.          | 1     | Cinema     |
+| 4   | Research is interesting and important. | 3   | Science    |
+| 5   | Learning math is very important.    | 3     | Science    |
+| 6   | Science discovery is interesting.   | 3     | Science    |
+| 7   | Rock is great to listen to.         | 2     | Music      |
+| 8   | Listen to music for fun.            | 2     | Music      |
+| 9   | Music is fun for everyone.          | 2     | Music      |
+| 10  | Listen to folk music!               | 2     | Music      |
 
 - Markdown support
 - LaTeX math support: $E = mc^2$
