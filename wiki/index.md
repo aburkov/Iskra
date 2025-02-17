@@ -1,6 +1,8 @@
-# Welcome to MDWiki
+# Welcome to Iskra
 
-This is a modern implementation of MDWiki using React.
+Iskra is a JavaScript wiki engine that runs entirely in the browser. The wiki articles can be stored in any public GitHub repository. They are fetched dynamically when a user visits a corresponding wiki page.
+
+Iskra comes with a search engine which builds an index and stores it on the user's browser the first time the user uses it. After this, the index is incrementally updated if new articles are added to the wiki. This means that for the search to work fast, the wiki should not be very large. If the wiki is large, the search can be deactivated in a config file.
 
 ## Introduction
 
