@@ -89,7 +89,14 @@ $$
 E = mc^2
 $$
 
-
+| | `num_blocks` | `emb_dim` | `num_heads` | `vocab_size` |
+|---------|---:|---:|---:|---:|
+| Our model | 2 | 128 | 8 | 32,011 |
+| Llama 3.1 8B | 32 | 4,096 | 32 | 128,000 |
+| Gemma 2 9B | 42 | 3,584 | 16 | 256,128 |
+| Gemma 2 27B | 46 | 4,608 | 32 | 256,128 |
+| Llama 3.1 70B | 80 | 8,192 | 64 | 128,000 |
+| Llama 3.1 405B | 126 | 16,384 | 128 | 128,000 |
 
 - Markdown support
 - LaTeX math support: $E = mc^2$
