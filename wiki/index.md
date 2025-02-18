@@ -65,7 +65,7 @@ def initialize_vocabulary(corpus):
 - GitHub integration 2
 
 $$
-E = \sqrt{mc^2}
+E = \sqrt{mc^2}\frac{1}{3}
 $$
 
 | Doc | Text                                | Class ID | Class Name |
