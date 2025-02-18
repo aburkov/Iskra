@@ -1,7 +1,3 @@
-Below is the full revised tutorial with the additional detailed explanation integrated. In the new sections, we include a simple numerical example illustrating the computations for a concrete action and state, and we explain how, in text generation, many actions and states are combined to form the overall KL divergence penalty. No existing explanations are reduced or removed.
-
-
-
 # Building the GRPO Algorithm from First Principles
 
 Mathematical reasoning is a challenging task for language models because it requires both accurate quantitative reasoning and careful multi-step problem solving. In our work, we aim to boost the mathematical capabilities of a model by combining standard supervised fine-tuning with reinforcement learning (RL). In particular, our Group Relative Policy Optimization (GRPO) algorithm is designed to maximize reward signals (which encourage correct reasoning) while regularizing the model so that it does not deviate too abruptly from a trusted reference behavior. GRPO is a variant of Proximal Policy Optimization (PPO) that foregoes a separate critic model in favor of estimating baselines from groups of outputs sampled per prompt—reducing memory requirements while leveraging the comparative nature of reward signals.
