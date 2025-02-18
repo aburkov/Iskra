@@ -6,7 +6,7 @@ Iskra comes with a search engine which builds an index and stores it on the user
 
 ## Introduction
 
-MDWiki is a simple wiki system that uses Markdown files for content. Here's an article about [transformer](transformer.md).
+MDWiki is a simple wiki system that uses Markdown files for content. Here's an article about [transformer](transformer.md) and [GRPO](GRPO.md).
 
 ## Features
 
