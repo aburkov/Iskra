@@ -1,13 +1,5 @@
 # The Log-Derivative Trick
 
-$$
-J(\theta) = \mathbb{E}_{q \sim P(q),\, o \sim \pi_\theta(\cdot \mid q)}[r(q, o)]...
-$$
-
-$$
-J(\theta) = 𝔼_{q \sim P(q),\, o \sim \pi_\theta(\cdot \mid q)}[r(q, o)]..
-$$
-
 The log‐derivative trick (also known as the score function trick) is a simple but powerful identity that relates the gradient of a function to the gradient of its logarithm. Formally, if you have any differentiable function $f(\theta)$ (with $f(\theta) > 0$ so that its logarithm is well-defined), then by the chain rule we have:
 
 $$
@@ -62,7 +54,7 @@ $$
 In policy gradient methods, we want to differentiate an expectation that involves our policy $\pi_\theta(o \mid q)$. For example, if our objective is
 
 $$
-J(\theta) = \mathbb{E}_{q \thicksim P(q), o \thicksim \pi_\theta(\cdot \mid q)}[r(q, o)]
+J(\theta) = 𝔼_{q \sim P(q), o \sim \pi_\theta(\cdot \mid q)}[r(q, o)]
 $$
 
 then when we take the gradient with respect to $\theta$, we encounter derivatives of $\pi_\theta(o \mid q)$. Using the log-derivative trick allows us to rewrite:
@@ -74,7 +66,7 @@ $$
 which then, after pulling the probability $\pi_\theta(o \mid q)$ inside the expectation, leads directly to the update formula:
 
 $$
-\nabla_\theta J(\theta) = \mathbb{E}_{q,\, o}\Bigl[ r(q,o) \, \nabla_\theta \log \pi_\theta(o \mid q) \Bigr].
+\nabla_\theta J(\theta) = 𝔼_{q,\, o}\Bigl[ r(q,o) \, \nabla_\theta \log \pi_\theta(o \mid q) \Bigr].
 $$
 
 This formulation is especially useful because it expresses the gradient entirely in terms of the gradient of the log-probability, multiplied by the reward (or advantage). The result is a neat expression that tells us exactly how much to adjust the parameters in order to increase the probability of generating outcomes that yield higher rewards.
