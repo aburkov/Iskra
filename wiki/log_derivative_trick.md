@@ -1,9 +1,5 @@
 # The Log-Derivative Trick
 
-$$
-\log \pi_\theta(o | q).
-$$
-
 The log‐derivative trick (also known as the score function trick) is a simple but powerful identity that relates the gradient of a function to the gradient of its logarithm. Formally, if you have any differentiable function $f(\theta)$ (with $f(\theta) > 0$ so that its logarithm is well-defined), then by the chain rule we have:
 
 $$
@@ -27,31 +23,31 @@ $$
 1. **Start with the Logarithm:**
    For any function $\pi_\theta(o | q)$, consider its logarithm:
    
-   $$
-   \log \pi_\theta(o | q).
-   $$
+$$
+\log \pi_\theta(o | q).
+$$
    
    This is a function of $\theta$.
 
 3. **Differentiate the Logarithm:**
    Compute the gradient of the logarithm with respect to $\theta$:
    
-   $$
-   \nabla_\theta \log \pi_\theta(o | q).
-   $$
+$$
+\nabla_\theta \log \pi_\theta(o | q).
+$$
    
    By the chain rule, this is given by:
    
-   $$
-   \nabla_\theta \log \pi_\theta(o | q) = \frac{1}{\pi_\theta(o | q)} \, \nabla_\theta \pi_\theta(o | q).
-   $$
+$$
+\nabla_\theta \log \pi_\theta(o | q) = \frac{1}{\pi_\theta(o | q)} \, \nabla_\theta \pi_\theta(o | q).
+$$
 
 5. **Rearrange to Express the Original Gradient:**
    Multiply both sides of the equation by $\pi_\theta(o | q)$:
    
-   $$
-   \nabla_\theta \pi_\theta(o | q) = \pi_\theta(o | q) \, \nabla_\theta \log \pi_\theta(o | q).
-   $$
+$$
+\nabla_\theta \pi_\theta(o | q) = \pi_\theta(o | q) \, \nabla_\theta \log \pi_\theta(o | q).
+$$
 
 ## Why Is This Useful?
 
