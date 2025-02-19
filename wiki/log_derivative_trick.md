@@ -1,5 +1,9 @@
 # The Log-Derivative Trick
 
+$$
+J(\theta) = \mathbb{E}_{q \thicksim P(q), o \thicksim \pi_\theta(\cdot \mid q)}[r(q, o)]
+$$
+
 The log‐derivative trick (also known as the score function trick) is a simple but powerful identity that relates the gradient of a function to the gradient of its logarithm. Formally, if you have any differentiable function $f(\theta)$ (with $f(\theta) > 0$ so that its logarithm is well-defined), then by the chain rule we have:
 
 $$
