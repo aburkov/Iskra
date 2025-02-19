@@ -1,10 +1,10 @@
-# Building the GRPO Algorithm from First Principles
+# Building the GRPO Algorithm from First Principles  
 
-Mathematical reasoning is a challenging task for language models because it requires both accurate quantitative reasoning and careful multi-step problem solving. In our work, we aim to boost the mathematical capabilities of a model by combining standard supervised fine-tuning with reinforcement learning (RL). In particular, our Group Relative Policy Optimization (GRPO) algorithm is designed to maximize reward signals (which encourage correct reasoning) while regularizing the model so that it does not deviate too abruptly from a trusted reference behavior. GRPO is a variant of Proximal Policy Optimization (PPO) that foregoes a separate critic model in favor of estimating baselines from groups of outputs sampled per prompt—reducing memory requirements while leveraging the comparative nature of reward signals.
+Mathematical reasoning is hard for language models. It demands both precise quantitative reasoning and careful multi-step problem-solving. A trained model can improve at math through **reinforcement learning** (RL). Here, we build **Group Relative Policy Optimization** (GRPO) from scratch—an RL algorithm designed to train language models on tasks with exact answers, such as coding, math, and logic. GRPO takes advantage of reasoning steps, where the model generates a chain of thought before answering, which has been shown to improve accuracy.  
 
-In the following sections, we introduce the two main ingredients of GRPO—the policy gradient loss and the Kullback–Leibler (KL) divergence penalty—and show how they combine to form our per-token loss. We then describe how model outputs are converted to log probabilities, how completions are generated and masked (so that tokens after an end-of-sequence marker are ignored), and finally how all these pieces are integrated into a full training loop that includes reinforcement learning.
+GRPO is a simplified version of **Proximal Policy Optimization** (PPO), an algorithm commonly used in **reinforcement learning from human feedback** (RLHF) to align models with user preferences. Unlike PPO, GRPO removes the **critic model**, which simplifies training and reduces memory use. Instead of learning from a critic's estimated values, GRPO estimates baselines from groups of sampled outputs. This works well for math problems since rewards can be assigned by comparing the generated answer to the ground truth through string matching—eliminating the need for human feedback.
 
-
+Next, we introduce the two core components of GRPO: **policy gradient loss** and the **Kullback–Leibler (KL) divergence** penalty. We explain how model outputs are converted to log probabilities, how completions are generated and masked (ignoring tokens after an end-of-sequence marker), and how all these elements come together in a full RL training loop.
 
 ## 1. Policy Gradient Loss
 
