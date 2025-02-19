@@ -54,7 +54,7 @@ $$
 In policy gradient methods, we want to differentiate an expectation that involves our policy $\pi_\theta(o \mid q)$. For example, if our objective is
 
 \[
-J(\theta) = \mathbb{E}_{q \sim P(q), o \sim \pi_\theta(\cdot \mid q)}[r(q, o)]
+J(\theta) = \sum_{q \sim P(q), o \sim \pi_\theta(\cdot \mid q)}[r(q, o)]
 \]
 
 then when we take the gradient with respect to $\theta$, we encounter derivatives of $\pi_\theta(o \mid q)$. Using the log-derivative trick allows us to rewrite:
