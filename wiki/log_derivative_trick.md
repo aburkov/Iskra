@@ -22,23 +22,29 @@ $$
 
 1. **Start with the Logarithm:**
    For any function $\pi_\theta(o \mid q)$, consider its logarithm:
+   
    $$
    \log \pi_\theta(o \mid q).
    $$
+   
    This is a function of $\theta$.
 
-2. **Differentiate the Logarithm:**
+3. **Differentiate the Logarithm:**
    Compute the gradient of the logarithm with respect to $\theta$:
+   
    $$
    \nabla_\theta \log \pi_\theta(o \mid q).
    $$
+   
    By the chain rule, this is given by:
+   
    $$
    \nabla_\theta \log \pi_\theta(o \mid q) = \frac{1}{\pi_\theta(o \mid q)} \, \nabla_\theta \pi_\theta(o \mid q).
    $$
 
-3. **Rearrange to Express the Original Gradient:**
+5. **Rearrange to Express the Original Gradient:**
    Multiply both sides of the equation by $\pi_\theta(o \mid q)$:
+   
    $$
    \nabla_\theta \pi_\theta(o \mid q) = \pi_\theta(o \mid q) \, \nabla_\theta \log \pi_\theta(o \mid q).
    $$
