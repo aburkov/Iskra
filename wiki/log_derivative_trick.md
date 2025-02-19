@@ -1,5 +1,9 @@
 # The Log-Derivative Trick
 
+$$
+\pi_\theta(o | q)
+$$
+
 The log‐derivative trick (also known as the score function trick) is a simple but powerful identity that relates the gradient of a function to the gradient of its logarithm. Formally, if you have any differentiable function $f(\theta)$ (with $f(\theta) > 0$ so that its logarithm is well-defined), then by the chain rule we have:
 
 $$
@@ -71,4 +75,4 @@ $$
 
 This formulation is especially useful because it expresses the gradient entirely in terms of the gradient of the log-probability, multiplied by the reward (or advantage). The result is a neat expression that tells us exactly how much to adjust the parameters in order to increase the probability of generating outcomes that yield higher rewards.
 
-In summary, the log-derivative trick works for any differentiable function (such as $\pi_\theta(o | q)$) by allowing us to switch from differentiating the function itself to differentiating its logarithm. This is the key step that introduces the $\nabla_\theta \log \pi_\theta(o | q)$ term in the policy gradient update.
+In summary, the log-derivative trick works for any differentiable function ( such as $\pi_\theta(o | q)$ ) by allowing us to switch from differentiating the function itself to differentiating its logarithm. This is the key step that introduces the $\nabla_\theta \log \pi_\theta(o | q)$ term in the policy gradient update.
