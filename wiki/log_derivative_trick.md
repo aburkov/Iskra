@@ -18,7 +18,7 @@ $$
 \nabla_\theta \pi_\theta(o \mid q) = \pi_\theta(o \mid q) \, \nabla_\theta \log \pi_\theta(o \mid q).
 $$
 
-## How It Works for an Arbitrary Function $ \pi_\theta(o, q) $
+## How It Works for an Arbitrary Function $\pi_\theta(o, q)$
 
 1. **Start with the Logarithm:**
    For any function $\pi_\theta(o \mid q)$, consider its logarithm:
