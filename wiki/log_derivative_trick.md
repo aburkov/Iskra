@@ -1,7 +1,7 @@
 # The Log-Derivative Trick
 
 $$
-J(\theta) = \mathbb{E}_{q \sim P(q),\, o \sim \pi_\theta(\cdot \mid q)}[r(q, o)]..
+J(\theta) = \mathbb{E}_{q \sim P(q),\, o \sim \pi_\theta(\cdot \mid q)}[r(q, o)]...
 $$
 
 $$
