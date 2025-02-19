@@ -12,7 +12,7 @@ $$
 \nabla_\theta f(\theta) = f(\theta) \, \nabla_\theta \log f(\theta).
 $$
 
-When we apply this to a probability function $ \pi_\theta(o \mid q) $ (which is assumed to be differentiable with respect to $\theta$ and always positive), we get:
+When we apply this to a probability function $\pi_\theta(o \mid q)$ (which is assumed to be differentiable with respect to $\theta$ and always positive), we get:
 
 $$
 \nabla_\theta \pi_\theta(o \mid q) = \pi_\theta(o \mid q) \, \nabla_\theta \log \pi_\theta(o \mid q).
@@ -21,7 +21,7 @@ $$
 ## How It Works for an Arbitrary Function $ \pi_\theta(o, q) $
 
 1. **Start with the Logarithm:**
-   For any function $ \pi_\theta(o \mid q) $, consider its logarithm:
+   For any function $\pi_\theta(o \mid q)$, consider its logarithm:
    $$
    \log \pi_\theta(o \mid q).
    $$
