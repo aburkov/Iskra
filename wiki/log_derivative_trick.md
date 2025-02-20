@@ -23,7 +23,7 @@ This equation forms the foundation of the log-derivative trick. It lets us shift
 When $f(\theta)$ represents a probability function—say, a policy $\pi_\theta(o \mid q)$ that gives the probability of taking an action $o$ in a state $q$—we can apply the identity directly:
 
 $$
-\nabla_\theta \pi_\theta(o \mid q) = \pi_\theta(o \mid q) \, \nabla_\theta \log \pi_\theta(o \mid q).
+\nabla_\theta \pi_\theta(o \mid q) = \pi_\theta(o \mid q)\nabla_\theta \log \pi_\theta(o \mid q).
 $$
 
 This reformulation is especially useful because many probability functions (such as those defined by a softmax) have complex forms that are difficult to differentiate directly. By transferring the derivative to the logarithm, the computation becomes more manageable.
@@ -44,7 +44,7 @@ $$
 3. **Rearrange to express the original derivative:**  
    Multiply both sides by $\pi_\theta(o \mid q)$ to obtain
 $$
-\nabla_\theta \pi_\theta(o \mid q) = \pi_\theta(o \mid q) \, \nabla_\theta \log \pi_\theta(o \mid q)
+\nabla_\theta \pi_\theta(o \mid q) = \pi_\theta(o \mid q)\nabla_\theta \log \pi_\theta(o \mid q)
 $$
 
 ## 4. Expected Value as a Weighted Average
@@ -78,7 +78,7 @@ Here, the derivatives $\nabla_\theta p_\theta(i)$ appear naturally because any c
 
 Observe that:
 
-- The expected reward $J(\theta)$ is built from the sum $\sum_i p_\theta(i) \, r(i)$; the probabilities $p_\theta(i)$ are intrinsic to this definition.
+- The expected reward $J(\theta)$ is built from the sum $\sum_i p_\theta(i)r(i)$; the probabilities $p_\theta(i)$ are intrinsic to this definition.
 - When we differentiate, we are differentiating a sum that is weighted by $p_\theta(i)$; thus, the same factors $p_\theta(i)$ that contribute to the average naturally appear in the derivative.
 
 ## 5. Using the Log-Derivative Trick in the Gradient
@@ -86,13 +86,13 @@ Observe that:
 Use the log-derivative equation to replace $\nabla_\theta p_\theta(i)$:
 
 $$
-\nabla_\theta p_\theta(i) = p_\theta(i) \, \nabla_\theta \log p_\theta(i)
+\nabla_\theta p_\theta(i) = p_\theta(i)\nabla_\theta \log p_\theta(i)
 $$
 
 Then, the gradient of the expected reward becomes:
 
 $$
-\nabla_\theta J(\theta) = \sum_{i=1}^n r(i) \, \bigl[ p_\theta(i) \, \nabla_\theta \log p_\theta(i) \bigr] = \sum_{i=1}^n p_\theta(i) \, r(i) \, \nabla_\theta \log p_\theta(i)
+\nabla_\theta J(\theta) = \sum_{i=1}^n r(i)\bigl[ p_\theta(i)\nabla_\theta \log p_\theta(i) \bigr] = \sum_{i=1}^n p_\theta(i)r(i)\nabla_\theta \log p_\theta(i)
 $$
 
 ## 6. The Log-Derivative Trick in Policy Gradient Methods
@@ -106,25 +106,25 @@ $$
 Differentiating this with respect to $\theta$ gives:
 
 $$
-\nabla_\theta J(\theta) = \sum_o r(q, o) \, \nabla_\theta \pi_\theta(o \mid q).
+\nabla_\theta J(\theta) = \sum_o r(q, o)\nabla_\theta \pi_\theta(o \mid q).
 $$
 
 Using the log-derivative trick,
 
 $$
-\nabla_\theta \pi_\theta(o \mid q) = \pi_\theta(o \mid q) \, \nabla_\theta \log \pi_\theta(o \mid q),
+\nabla_\theta \pi_\theta(o \mid q) = \pi_\theta(o \mid q)\nabla_\theta \log \pi_\theta(o \mid q),
 $$
 
 the gradient becomes:
 
 $$
-\nabla_\theta J(\theta) = \sum_o \pi_\theta(o \mid q) \, r(q, o) \, \nabla_\theta \log \pi_\theta(o \mid q).
+\nabla_\theta J(\theta) = \sum_o \pi_\theta(o \mid q)r(q, o)\nabla_\theta \log \pi_\theta(o \mid q).
 $$
 
 Expressed as an expectation:
 
 $$
-\nabla_\theta J(\theta) = 𝔼_{o \sim \pi_\theta(\cdot \mid q)} \Bigl[ r(q, o) \, \nabla_\theta \log \pi_\theta(o \mid q) \Bigr].
+\nabla_\theta J(\theta) = 𝔼_{o \sim \pi_\theta(\cdot \mid q)} \Bigl[ r(q, o)\nabla_\theta \log \pi_\theta(o \mid q) \Bigr].
 $$
 
 This is the basis of the REINFORCE algorithm and other policy gradient methods.
@@ -140,10 +140,10 @@ Because both the objective $J(\theta)$ and its gradient are expressed as expecta
    For each sampled action $o$, you observe a reward $r(q, o)$. This reward is paired with the gradient $\nabla_\theta \log \pi_\theta(o \mid q)$.
 
 3. **Estimating the Gradient:**
-   The product $r(q, o) \, \nabla_\theta \log \pi_\theta(o \mid q)$ is computed for each sample. By averaging these products over many samples, you obtain an unbiased estimate of the gradient:
+   The product $r(q, o)\nabla_\theta \log \pi_\theta(o \mid q)$ is computed for each sample. By averaging these products over many samples, you obtain an unbiased estimate of the gradient:
 
 $$
-\nabla_\theta J(\theta) \approx \frac{1}{N} \sum_{i=1}^N r(q, o_i) \, \nabla_\theta \log \pi_\theta(o_i \mid q),
+\nabla_\theta J(\theta) \approx \frac{1}{N} \sum_{i=1}^N r(q, o_i)\nabla_\theta \log \pi_\theta(o_i \mid q),
 $$
    where each $o_i$ is a sample from $\pi_\theta(o \mid q)$.
 
