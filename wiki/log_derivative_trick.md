@@ -5,13 +5,15 @@ The log-derivative trick (also known as the score function trick) is a powerful 
 ## 1. The Basic Mathematical Relationship
 
 Let $f(\theta)$ be a positive, differentiable function. By applying the chain rule to its logarithm, we have:
+
 $$
-\nabla_\theta \log f(\theta) = \frac{\nabla_\theta f(\theta)}{f(\theta)}.
+\nabla_\theta \log f(\theta) = \frac{\nabla_\theta f(\theta)}{f(\theta)}
 $$
 
 Rearranging this equation gives:
+
 $$
-\nabla_\theta f(\theta) = f(\theta) \, \nabla_\theta \log f(\theta).
+\nabla_\theta f(\theta) = f(\theta) \, \nabla_\theta \log f(\theta)
 $$
 
 This equation forms the foundation of the log-derivative trick. It lets us shift the differentiation from the function itself to the logarithm of the function—a form that is often simpler to work with.
