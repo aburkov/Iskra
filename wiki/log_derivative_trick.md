@@ -83,7 +83,7 @@ $$
 Differentiating this with respect to $\theta$ gives:
 
 $$
-\nabla_\theta J(\theta) = \sum_o r(q, o)\nabla_\theta \pi_\theta(o \mid q).
+\nabla_\theta J(\theta) = \sum_o r(q, o)\nabla_\theta \pi_\theta(o \mid q)
 $$
 
 Using the log-derivative trick,
@@ -95,13 +95,13 @@ $$
 the gradient becomes:
 
 $$
-\nabla_\theta J(\theta) = \sum_o \pi_\theta(o \mid q)r(q, o)\nabla_\theta \log \pi_\theta(o \mid q).
+\nabla_\theta J(\theta) = \sum_o \pi_\theta(o \mid q)r(q, o)\nabla_\theta \log \pi_\theta(o \mid q)
 $$
 
 Expressed as an expectation:
 
 $$
-\nabla_\theta J(\theta) = 𝔼_{o \sim \pi_\theta(\cdot \mid q)} \Bigl[ r(q, o)\nabla_\theta \log \pi_\theta(o \mid q) \Bigr].
+\nabla_\theta J(\theta) = 𝔼_{o \sim \pi_\theta(\cdot \mid q)} \Bigl[ r(q, o)\nabla_\theta \log \pi_\theta(o \mid q) \Bigr]
 $$
 
 This is the basis of the REINFORCE algorithm and other policy gradient methods.
