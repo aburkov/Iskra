@@ -37,12 +37,14 @@ Consider an arbitrary differentiable function $\pi_\theta(o \mid q)$. The proces
    
 2. **Differentiate the logarithm:**
    Compute $\nabla_\theta \log \pi_\theta(o \mid q)$. By the chain rule, this is
+
 $$
 \nabla_\theta \log \pi_\theta(o \mid q) = \frac{\nabla_\theta \pi_\theta(o \mid q)}{\pi_\theta(o \mid q)}
 $$
 
-3. **Rearrange to express the original derivative:**  
+4. **Rearrange to express the original derivative:**  
    Multiply both sides by $\pi_\theta(o \mid q)$ to obtain
+
 $$
 \nabla_\theta \pi_\theta(o \mid q) = \pi_\theta(o \mid q)\nabla_\theta \log \pi_\theta(o \mid q)
 $$
@@ -56,6 +58,7 @@ Consider a simple discrete scenario:
   
 - **Definition of Expected Reward:**
   The expected reward (or average reward) is defined as:
+
 $$
 J(\theta) = p_\theta(1)r(1) + p_\theta(2)r(2) + \cdots + p_\theta(n)r(n)
 $$
