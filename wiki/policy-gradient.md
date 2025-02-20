@@ -58,9 +58,7 @@ $$
 \nabla_\theta J(\theta) = 𝔼_{q\sim P(q)}\Bigl[𝔼_{o \sim \pi_\theta(\cdot \mid q)}\bigl[r(q,o) \, \nabla_\theta \log \pi_\theta(o \mid q) \bigr]\Bigr]
 $$
 
-Notice that the expectation over $q$ remains intact; we did not lose the prompt distribution at any point. The linearity of differentiation allowed us to differentiate inside the expectation because $P(q)$ is fixed and independent of $\theta$.
-
-In the policy gradient update, for each token $ o_{i,t} $ in a generated sequence (with its corresponding prompt $q$), we update the parameters by moving in the direction:
+In the policy gradient update, for each token $o_{i,t}$ in a generated sequence (with its corresponding prompt $q$), we update the parameters by moving in the direction:
 
 $$
 \nabla_\theta \log \pi_\theta(o_{i,t} \mid q, o_{i,<t})
