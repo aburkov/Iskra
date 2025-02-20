@@ -108,7 +108,7 @@ This is the basis of the REINFORCE algorithm and other policy gradient methods.
 
 ## 6. How This Leads to Sampling-Based Gradient Estimation
 
-Because both the objective $J(\theta)$ and its gradient are expressed as expectations over the policy $\pi_\theta(o \mid q)$, we can compute them using Monte Carlo sampling:
+Because both the objective $J(\theta)$ and its gradient are expressed as expectations over the policy $\pi_\theta(o \mid q)$, we can compute them using **Monte Carlo sampling**:
 
 1. **Sampling from the Policy:**
    Since the expectation is taken over $o \sim \pi_\theta(\cdot \mid q)$, you can generate samples by executing the policy. Each action $o$ is drawn with probability $\pi_\theta(o \mid q)$.
