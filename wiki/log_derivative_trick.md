@@ -36,7 +36,7 @@ Consider a simple discrete scenario:
   Suppose there are outcomes $i = 1, 2, \dots, n$ of a lottery. Each outcome $i$ occurs with probability $p_\theta(i)$ (which depends on $\theta$) and yields a reward $r(i)$.
   
 - **Definition of Expected Reward:**
-  The expected reward (or average reward) is defined as:
+  The expected reward is defined as:
 
 $$
 J(\theta) = p_\theta(1)r(1) + p_\theta(2)r(2) + \cdots + p_\theta(n)r(n)
