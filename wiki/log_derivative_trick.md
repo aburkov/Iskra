@@ -20,10 +20,10 @@ This equation forms the foundation of the log-derivative trick. It lets us shift
 
 ## 2. Application to Probability Functions
 
-When $f(\theta)$ represents a probability function—say, a policy $\pi_\theta(o \mid q)$ that gives the probability of taking an action $o$ in a state $q$—we can apply the identity directly:
+When $f(\theta)$ represents a probability function—say, a policy $\pi_\theta(o \mid q)$ that gives the probability of taking an action $o$ in a state $q$—we can use the same equation:
 
 $$
-\nabla_\theta \pi_\theta(o \mid q) = \pi_\theta(o \mid q)\nabla_\theta \log \pi_\theta(o \mid q).
+\nabla_\theta \pi_\theta(o \mid q) = \pi_\theta(o \mid q)\nabla_\theta \log \pi_\theta(o \mid q)
 $$
 
 This reformulation is especially useful because many probability functions (such as those defined by a softmax) have complex forms that are difficult to differentiate directly. By transferring the derivative to the logarithm, the computation becomes more manageable.
