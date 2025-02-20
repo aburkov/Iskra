@@ -50,6 +50,8 @@ $$
 \nabla_\theta J(\theta) = \sum_{i=1}^n r(i)\nabla_\theta p_\theta(i)
 $$
 
+## 4. Using the Log-Derivative Trick in the Gradient
+
 By applying the log-derivative trick to $\nabla_\theta p_\theta(i)$:
 
 $$
@@ -69,20 +71,6 @@ Now we can see a beautiful symmetry:
 - In the derivative, the same $p_\theta(i)$ weights each term $r(i)\nabla_\theta \log p_\theta(i)$
 
 This emergence of the same probability weights is what makes the log-derivative trick particularly powerful: it allows us to estimate both the expectation and its gradient using the same sampling distribution. This connection between the original expectation and its gradient forms the foundation for many sampling-based gradient estimation methods in machine learning.
-
-## 4. Using the Log-Derivative Trick in the Gradient
-
-Use the log-derivative equation to replace $\nabla_\theta p_\theta(i)$:
-
-$$
-\nabla_\theta p_\theta(i) = p_\theta(i)\nabla_\theta \log p_\theta(i)
-$$
-
-Then, the gradient of the expected reward becomes:
-
-$$
-\nabla_\theta J(\theta) = \sum_{i=1}^n r(i)\bigl[ p_\theta(i)\nabla_\theta \log p_\theta(i) \bigr] = \sum_{i=1}^n p_\theta(i)r(i)\nabla_\theta \log p_\theta(i)
-$$
 
 ## 5. The Log-Derivative Trick in Policy Gradient Methods
 
