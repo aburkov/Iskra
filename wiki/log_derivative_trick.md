@@ -122,7 +122,8 @@ Because both the objective $J(\theta)$ and its gradient are expressed as expecta
 $$
 \nabla_\theta J(\theta) \approx \frac{1}{N} \sum_{i=1}^N r(q, o_i)\nabla_\theta \log \pi_\theta(o_i \mid q),
 $$
-   where each $o_i$ is a sample from $\pi_\theta(o \mid q)$.
+
+where each $o_i$ is a sample from $\pi_\theta(o \mid q)$.
 
 ### Why Is This Useful?
 
