@@ -50,7 +50,7 @@ $$
 \nabla_\theta J(\theta) = \sum_{i=1}^n r(i)\nabla_\theta p_\theta(i)
 $$
 
-This derivative doesn't immediately show where the original probability weights $p_\theta(i)$ are. However, by applying the log-derivative trick to $\nabla_\theta p_\theta(i)$:
+By applying the log-derivative trick to $\nabla_\theta p_\theta(i)$:
 
 $$
 \nabla_\theta p_\theta(i) = p_\theta(i)\nabla_\theta \log p_\theta(i)
