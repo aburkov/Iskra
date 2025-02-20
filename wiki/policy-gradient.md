@@ -55,77 +55,49 @@ $$
 Now, plugging this back into the full gradient, we have:
 
 $$
-\nabla_\theta J(\theta) = 𝔼_{q\sim P(q)}\Bigl[𝔼_{o \sim \pi_\theta(\cdot \mid q)}\bigl[r(q,o) \, \nabla_\theta \log \pi_\theta(o \mid q) \bigr]\Bigr]
+\nabla_\theta J(\theta) = 𝔼_{q\sim P(q)}\Bigl[𝔼_{o \sim \pi_\theta(\cdot \mid q)}\bigl[r(q,o)\nabla_\theta \log \pi_\theta(o \mid q) \bigr]\Bigr]
 $$
 
-In the policy gradient update, for each token $o_{i,t}$ in a generated sequence (with its corresponding prompt $q$), we update the parameters by moving in the direction:
+### 3. Replacing the Reward $r(q, o)$ with an Arbitrary Term
+
+In many practical settings, the reward $r(q, o)$ is not the only signal we care about. For example, we might introduce:
+
+1. **Advantage Functions**: Instead of using the raw reward $r(q,o)$, it is common to use an **advantage function** $A(q,o)$ that estimates how much better a particular action (or completion) is relative to some baseline. The idea is to replace $r(q,o)$ with $A(q,o)$ so that our gradient becomes
 
 $$
-\nabla_\theta \log \pi_\theta(o_{i,t} \mid q, o_{i,<t})
+\nabla_\theta J(\theta) = 𝔼_{q\sim P(q)}\Bigl[𝔼_{o \sim \pi_\theta(\cdot \mid q)}\bigl[A(q,o)\nabla_\theta \log \pi_\theta(o \mid q) \bigr]\Bigr]
 $$
 
-??????????
-
-This gradient is then scaled by a factor (the "gradient coefficient") which typically includes the advantage (or reward signal) and any additional corrections (such as KL divergence gradients). Multiplying by the reward signal ensures that tokens leading to higher rewards are reinforced.
-
-So, in summary:
-- **We don't lose the prompt distribution** because the gradient is taken under the expectation over $q$; that part remains throughout the derivation.
-- **The log probability term** appears because differentiating the probability $\pi_\theta(o \mid q)$ via the log-derivative trick naturally produces $\nabla_\theta \log \pi_\theta(o \mid q)$.
-- **Multiplying by the reward (or advantage)** adjusts the update magnitude to favor actions that yield higher rewards.
-
-This formal approach preserves the expectation over prompts while using the log-probability gradient to direct the parameter updates.
-
+2. **KL Divergence Terms**: When we want to prevent the policy from deviating too far from a reference (or previous) policy, a KL divergence penalty can be added. For instance, if we have a penalty term $\beta\text{KL}[\pi_\theta(\cdot|q) \,\|\, \pi_{\text{ref}}(\cdot|q)]$ where $\beta$ is a scaling factor, we can add this term to our advantage. In practice, this means our "reward" term in the gradient can become
 
 $$
-\nabla_\theta J(\theta) = \nabla_\theta 𝔼_{o \sim \pi_\theta(\cdot \mid q)} [r(q, o)].
+\tilde{r}(q,o) = A(q,o) + \beta\text{KL}[\pi_\theta(\cdot|q) \,\|\, \pi_{\text{ref}}(\cdot|q)]
 $$
 
-Because the expectation is over the policy, we can use the "log-derivative trick" (or REINFORCE trick), which tells us that:
+The gradient now reads
 
 $$
-\nabla_\theta \pi_\theta(o \mid q) = \pi_\theta(o \mid q)\, \nabla_\theta \log \pi_\theta(o \mid q).
+\nabla_\theta J(\theta) = 𝔼_{q\sim P(q)}\Bigl[𝔼_{o \sim \pi_\theta(\cdot \mid q)}\Bigl[\tilde{r}(q,o)\nabla_\theta \log \pi_\theta(o \mid q) \Bigr]\Bigr].
 $$
-This allows us to write:
+
+In both cases, the substitution doesn't change the fundamental structure of the policy gradient update; rather, it modifies the learning signal so that it can be more stable or incorporate additional constraints that guide learning.
+
+### 4. Moving from Expectations to Sample Averages
+
+In theory, our gradient expression is an expectation over all queries $q$ and completions $o$. However, in practice, we don’t have access to the full distributions. Instead, we can sample a batch of queries $\{q_i\}$ from our training set and for each query sample (i.e., use the trained language model to generate) completions $\{o_i\}$ from $\pi_\theta(o|q_i)$.
+
+Thus, the expectation can be approximated by the following **Monte Carlo estimate**:
+
 $$
-\nabla_\theta J(\theta) = 𝔼_{o \sim \pi_\theta(\cdot \mid q)}\left[ r(q, o) \, \nabla_\theta \log \pi_\theta(o \mid q) \right].
+\nabla_\theta J(\theta) \approx \frac{1}{N} \sum_{i=1}^{N} \tilde{r}(q_i,o_i)\nabla_\theta \log \pi_\theta(o_i \mid q_i),
 $$
-The key point is that the gradient of the log of the policy appears naturally as the result of differentiating the probability distribution with respect to its parameters. This is where the term $\nabla_\theta \log \pi_\theta(o \mid q)$ comes from.
 
----
+where $\tilde{r}(q_i,o_i)$ represents the learning signal. This signal could be the original reward $r(q_i, o_i)$, an advantage $A(q_i, o_i)$, or a combination with a KL divergence term as described above.
 
-### 3. Why Multiply by the Reward?
+#### Why is This Useful?
 
-Multiplying the gradient of the log probability by the reward (or an advantage function) has a very intuitive meaning:
+1. **Flexibility**: By substituting $r(q,o)$ with an advantage or an augmented reward, we can incorporate additional information (like a baseline for variance reduction or a regularization penalty) without changing the underlying derivation.
 
-- **Direction of Improvement:**  
-  The term $\nabla_\theta \log \pi_\theta(o \mid q)$ tells us how a small change in the parameters $\theta$ will affect the log probability of generating $ o $. If an action $ o $ yields a high reward, we want to increase its probability. By multiplying by $ r(q, o) $ (or a more refined advantage $ \hat{A} $), we weight the gradient update so that actions with higher rewards are reinforced.
-  
-- **Scaling Updates Appropriately:**  
-  If the reward is high, the product $ r(q, o)\, \nabla_\theta \log \pi_\theta(o \mid q) $ is large, causing a larger update that increases the probability of $ o $. Conversely, if the reward is low (or negative), the update will push the policy away from generating $ o $.
+2. **Sample Efficiency**: Sampling queries and completions allows us to approximate the expectation with finite samples. This makes the algorithm computationally tractable and allows us to update the parameters $\theta$ using stochastic gradient ascent.
 
-- **Variance Reduction (via Advantage):**  
-  In practice, instead of using the raw reward, we often use an advantage $ \hat{A}(q, o) $ which measures how much better an action is compared to a baseline. This helps reduce variance. The update then becomes:
-  $$
-  \nabla_\theta J(\theta) \approx 𝔼_{o \sim \pi_\theta(\cdot \mid q)}\left[ \hat{A}(q, o) \, \nabla_\theta \log \pi_\theta(o \mid q) \right].
-  $$
-
-Thus, multiplying by the reward (or advantage) ensures that the update moves the policy parameters in the direction that increases the likelihood of actions that yield higher rewards and decreases the likelihood of actions that yield lower rewards.
-
----
-
-### 4. Summary in the Context of GRPO
-
-In the GRPO framework, the per-token update is of the form:
-$$
-\text{Gradient Update} \propto \Bigl(\hat{A}_{i,t} + \text{(KL penalty term)}\Bigr) \nabla_\theta \log \pi_\theta(o_{i,t} \mid q, o_{i,<t}).
-$$
-Here:
-- $ \nabla_\theta \log \pi_\theta(o_{i,t} \mid q, o_{i,<t}) $ comes from the log-derivative trick.
-- $ \hat{A}_{i,t} $ is the advantage signal computed (for example, by normalizing rewards across multiple generated sequences).
-- The KL penalty term (derived by differentiating the KL divergence between the current and reference policies) ensures the new policy does not stray too far from the reference.
-
-By scaling the gradient of the log probability with the advantage (and KL correction), the update effectively reinforces the probability of tokens that contributed to higher rewards, which is precisely why we multiply the gradient by the reward signal.
-
----
-
-This formal derivation explains both where the log of the policy arises in the policy gradient update and why it is multiplied by the reward (or advantage) to improve the policy.
+3. **Empirical Optimization**: In real-world training, we compute the gradient using these sample averages over mini-batches. This Monte Carlo estimate is unbiased and, with enough samples, closely approximates the true gradient of our objective.
