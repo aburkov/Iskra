@@ -28,38 +28,47 @@ $$
 
 This reformulation is especially useful because many probability functions (such as those defined by a softmax) have complex forms that are difficult to differentiate directly. By transferring the derivative to the logarithm, the computation becomes more manageable.
 
-## 3. Expected Value as a Weighted Average
+## 3. Expected Value as a Weighted Average and the Emergence of Natural Weights
 
-Consider a simple discrete scenario:
+Consider a simple discrete scenario with a lottery:
 
-- **Outcomes and Weights:**
-  Suppose there are outcomes $i = 1, 2, \dots, n$ of a lottery. Each outcome $i$ occurs with probability $p_\theta(i)$ (which depends on $\theta$) and yields a reward $r(i)$.
-  
-- **Definition of Expected Reward:**
-  The expected reward is defined as:
+- There are outcomes $i = 1, 2, \dots, n$
+- Each outcome $i$ occurs with probability $p_\theta(i)$ (which depends on $\theta$)
+- Each outcome yields a reward $r(i)$
 
-$$
-J(\theta) = p_\theta(1)r(1) + p_\theta(2)r(2) + \cdots + p_\theta(n)r(n)
-$$
-
-In this weighted sum, the probabilities $p_\theta(i)$ determine how much each reward $r(i)$ contributes. They are used as weights to compute the weighted average or the expected value of this lottery.
-
-Because the expected reward $J(\theta)$ is defined as
+The expected reward is defined as:
 
 $$
-J(\theta) = \sum_{i=1}^n p_\theta(i)r(i),
+J(\theta) = \sum_{i=1}^n p_\theta(i)r(i)
 $$
 
-and the rewards $r(i)$ do not depend on $\theta$, the entire dependence on $\theta$ comes from the probabilities $p_\theta(i)$. When we differentiate $J(\theta)$ with respect to $\theta$, we have:
+In this sum, the probabilities $p_\theta(i)$ act as weights that determine how much each reward $r(i)$ contributes to the total expectation.
+
+When we differentiate $J(\theta)$ with respect to $\theta$, and since the rewards $r(i)$ don't depend on $\theta$, we get:
 
 $$
 \nabla_\theta J(\theta) = \sum_{i=1}^n r(i)\nabla_\theta p_\theta(i)
 $$
 
-Observe that:
+This derivative doesn't immediately show where the original probability weights $p_\theta(i)$ are. However, by applying the log-derivative trick to $\nabla_\theta p_\theta(i)$:
 
-- The expected reward $J(\theta)$ is built from the sum $\sum_i p_\theta(i)r(i)$; the probabilities $p_\theta(i)$ are intrinsic to this definition.
-- When we differentiate, we are differentiating a sum that is weighted by $p_\theta(i)$; thus, the same factors $p_\theta(i)$ that contribute to the average naturally appear in the derivative.
+$$
+\nabla_\theta p_\theta(i) = p_\theta(i)\nabla_\theta \log p_\theta(i)
+$$
+
+We can rewrite the derivative as:
+
+$$
+\nabla_\theta J(\theta) = \sum_{i=1}^n r(i)[p_\theta(i)\nabla_\theta \log p_\theta(i)]
+= \sum_{i=1}^n p_\theta(i)[r(i)\nabla_\theta \log p_\theta(i)]
+$$
+
+Now we can see a beautiful symmetry:
+
+- In the original expectation, $p_\theta(i)$ weights each reward $r(i)$
+- In the derivative, the same $p_\theta(i)$ weights each term $r(i)\nabla_\theta \log p_\theta(i)$
+
+This emergence of the same probability weights is what makes the log-derivative trick particularly powerful: it allows us to estimate both the expectation and its gradient using the same sampling distribution. This connection between the original expectation and its gradient forms the foundation for many sampling-based gradient estimation methods in machine learning.
 
 ## 4. Using the Log-Derivative Trick in the Gradient
 
