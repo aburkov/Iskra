@@ -14,20 +14,18 @@ Here, $J(\theta)$ is the **objective** we want to maximize, $r(q, o)$ is the rew
 
 ### 2. Deriving the Gradient of the Objective
 
-To maximize the objective, we calculate its gradient. The gradient of the objective $J(\theta)$ with respect to the policy parameters $\theta$ is given by the policy gradient theorem. Let's see how this works.
+To maximize the objective, we calculate its gradient. Let's derive the gradient of the objective $J(\theta)$ with respect to the policy parameters $\theta$.
 
-Suppose the full objective is written as an expectation over both the prompt $q$ and the output $o$:
+We can rewrite the objective as follows:
 
 $$
 J(\theta) = 𝔼_{q\sim P(q)}\Bigl[𝔼_{o \sim \pi_\theta(\cdot \mid q)}[ r(q,o)]\Bigr]
 $$
 
-Here, $P(q)$ is the distribution over prompts, which is independent of $\theta$, because we randomly sample prompts from the training dataset.
-
-Because $P(q)$ does not depend on $\theta$, we can bring the gradient inside the outer expectation:
+Here, $P(q)$, the distribution over prompts, is independent of $\theta$, because we randomly sample prompts from the training dataset. Because $P(q)$ does not depend on $\theta$, we can bring the gradient inside the outer expectation:
 
 $$
-\nabla_\theta J(\theta) = 𝔼_{q\sim P(q)}\Bigl[\nabla_\theta 𝔼_{o \sim \pi_\theta(\cdot \mid q)}[ r(q,o)]\Bigr]
+\nabla_\theta J(\theta) = 𝔼_{q\sim P(q)}\Bigl[\nabla_\theta 𝔼_{o \sim \pi_\theta(\cdot \mid q)}[r(q,o)]\Bigr]
 $$
 
 Inside the inner expectation, we then differentiate with respect to $\theta$:
