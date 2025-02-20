@@ -56,8 +56,6 @@ $$
 \nabla_\theta J(\theta) = \sum_{i=1}^n r(i)\nabla_\theta p_\theta(i)
 $$
 
-Here, the derivatives $\nabla_\theta p_\theta(i)$ appear naturally because any change in $\theta$ changes the probabilities (the weights) and thereby affects the average. 
-
 Observe that:
 
 - The expected reward $J(\theta)$ is built from the sum $\sum_i p_\theta(i)r(i)$; the probabilities $p_\theta(i)$ are intrinsic to this definition.
