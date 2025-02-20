@@ -13,10 +13,10 @@ $$
 with $o$ sampled according to $\pi_{\text{ref}}$. Notice that
 
 $$
-\mathbb{E}_{o\sim\pi_{\text{ref}}}[X] = \sum_{o} \pi_{\text{ref}}(o)\frac{\pi_\theta(o)}{\pi_{\text{ref}}(o)} = \sum_{o} \pi_\theta(o) = 1.
+𝔼_{o\sim\pi_{\text{ref}}}[X] = \sum_{o} \pi_{\text{ref}}(o)\frac{\pi_\theta(o)}{\pi_{\text{ref}}(o)} = \sum_{o} \pi_\theta(o) = 1.
 $$
 
-It is known that for any positive random variable $X$ with $\mathbb{E}[X]=1$, the function
+It is known that for any positive random variable $X$ with $𝔼[X]=1$, the function
 
 $$
 h(X) = X - \log X - 1
@@ -25,7 +25,7 @@ $$
 satisfies
 
 $$
-\mathbb{E}_{o\sim\pi_{\text{ref}}}\bigl[h(X)\bigr] = D_{KL}(\pi_{\text{ref}}\parallel \pi_\theta).
+𝔼_{o\sim\pi_{\text{ref}}}\bigl[h(X)\bigr] = D_{KL}(\pi_{\text{ref}}\parallel \pi_\theta).
 $$
 
 Substitute $X = \frac{\pi_\theta(o)}{\pi_{\text{ref}}(o)}$ into $h(X)$:
@@ -37,7 +37,7 @@ $$
 Taking the expectation over $o \sim \pi_{\text{ref}}$, we obtain
 
 $$
-\mathbb{E}_{o\sim\pi_{\text{ref}}}\!\left[\frac{\pi_\theta(o)}{\pi_{\text{ref}}(o)} - \log\frac{\pi_\theta(o)}{\pi_{\text{ref}}(o)} - 1\right] = D_{KL}(\pi_{\text{ref}}\parallel \pi_\theta).
+𝔼_{o\sim\pi_{\text{ref}}}\!\left[\frac{\pi_\theta(o)}{\pi_{\text{ref}}(o)} - \log\frac{\pi_\theta(o)}{\pi_{\text{ref}}(o)} - 1\right] = D_{KL}(\pi_{\text{ref}}\parallel \pi_\theta).
 $$
 
 This demonstrates that the term
