@@ -73,10 +73,13 @@ $$
 ## 4. Incorporating Variance Reduction via Importance Weighting
 
 In practice—especially when sampling multiple completions per prompt—the advantage $A(q,o)$ is computed in a group–relative manner. Moreover, to prevent gradients from “leaking” through the baseline, we re–weight the advantage with an importance factor:
+
 $$
 w(o_t) = \exp\Bigl(\log \pi_\theta(o_t\mid q,o_{<t}) - \text{stop\_grad}\bigl(\log \pi_\theta(o_t\mid q,o_{<t})\bigr)\Bigr),
 $$
+
 which effectively equals 1 but ensures that the gradient only flows through the numerator. Then the per–token contribution becomes:
+
 $$
 \text{Loss}(o_t) = -\Bigl( w(o_t)\,A(q,o_t) - \beta\, f(\Delta_t) \Bigr).
 $$
@@ -86,9 +89,11 @@ $$
 ## 5. Final GRPO Loss Expression
 
 Averaging over all tokens in the generated output $o$ (and across multiple samples per prompt), the GRPO loss is given by:
+
 $$
 \mathcal{L}_{\text{GRPO}}(\theta) = -\frac{1}{N}\sum_{i=1}^{N} \frac{1}{|o^{(i)}|}\sum_{t=1}^{|o^{(i)}|} \Biggl( \exp\Bigl(\log \pi_\theta(o^{(i)}_t\mid q,o^{(i)}_{<t}) - \text{stop\_grad}\bigl(\log \pi_\theta(o^{(i)}_t\mid q,o^{(i)}_{<t})\bigr)\Bigr) A(q,o^{(i)}_t) - \beta\, f\bigl(\Delta^{(i)}_t\bigr) \Biggr),
 $$
+
 where $N$ is the number of sampled outputs (often grouped by prompt). Minimizing this loss (or, equivalently, maximizing its negative) updates the policy to favor completions with high relative advantage while penalizing those that diverge too far from the reference model.
 
 ---
@@ -97,20 +102,25 @@ where $N$ is the number of sampled outputs (often grouped by prompt). Minimizing
 
 - **Advantage Substitution:** Replace $r(q,o)$ with the advantage $A(q,o)$ computed over groups of completions.
 - **KL Penalty:** For each token, add a penalty
-  $$
-  f(\Delta_t) = \exp\bigl(\log \pi_{\text{ref}}(o_t\mid q,o_{<t}) - \log \pi_\theta(o_t\mid q,o_{<t})\bigr) - \Bigl(\log \pi_{\text{ref}}(o_t\mid q,o_{<t}) - \log \pi_\theta(o_t\mid q,o_{<t})\Bigr) - 1,
-  $$
+- 
+$$
+f(\Delta_t) = \exp\bigl(\log \pi_{\text{ref}}(o_t\mid q,o_{<t}) - \log \pi_\theta(o_t\mid q,o_{<t})\bigr) - \Bigl(\log \pi_{\text{ref}}(o_t\mid q,o_{<t}) - \log \pi_\theta(o_t\mid q,o_{<t})\Bigr) - 1,
+$$
+
   scaled by $\beta$.
 - **Importance Weighting:** Ensure gradients only flow through the current model’s parameters by using a detached baseline in the weighting.
 - **Final Loss:** The resulting GRPO loss per token is
-  $$
-  \ell_t = -\Bigl( \underbrace{\exp\Bigl(\log \pi_\theta(o_t\mid q,o_{<t}) - \text{stop\_grad}(\log \pi_\theta(o_t\mid q,o_{<t}))\Bigr) A(q,o_t)}_{\text{Policy Gradient Term}} - \beta\, \underbrace{\Bigl(\exp\bigl(\log \pi_{\text{ref}}(o_t\mid q,o_{<t}) - \log \pi_\theta(o_t\mid q,o_{<t})\bigr) - \bigl(\log \pi_{\text{ref}}(o_t\mid q,o_{<t}) - \log \pi_\theta(o_t\mid q,o_{<t})\bigr) - 1\Bigr)}_{\text{KL Penalty}} \Bigr).
-  $$
+- 
+$$
+\ell_t = -\Bigl( \underbrace{\exp\Bigl(\log \pi_\theta(o_t\mid q,o_{<t}) - \text{stop\_grad}(\log \pi_\theta(o_t\mid q,o_{<t}))\Bigr) A(q,o_t)}_{\text{Policy Gradient Term}} - \beta\, \underbrace{\Bigl(\exp\bigl(\log \pi_{\text{ref}}(o_t\mid q,o_{<t}) - \log \pi_\theta(o_t\mid q,o_{<t})\bigr) - \bigl(\log \pi_{\text{ref}}(o_t\mid q,o_{<t}) - \log \pi_\theta(o_t\mid q,o_{<t})\bigr) - 1\Bigr)}_{\text{KL Penalty}} \Bigr).
+$$
   
 This derivation shows how—in GRPO—we replace the original reward $r(q,o)$ with a learning signal
+
 $$
 \tilde{r}(q,o) = A(q,o) - \beta\, \Bigl(\exp\bigl(\log \pi_{\text{ref}}(o\mid q) - \log \pi_\theta(o\mid q)\bigr) - \bigl(\log \pi_{\text{ref}}(o\mid q) - \log \pi_\theta(o\mid q)\bigr) - 1\Bigr),
 $$
+
 thereby ensuring that outputs which both yield high (relative) advantage and remain close to the reference model are reinforced. This is the core idea behind the GRPO loss used in our implementation.
 
 --- 
