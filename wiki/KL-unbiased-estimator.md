@@ -37,7 +37,7 @@ $$
 Taking the expectation over $o \sim \pi_{\text{ref}}$, we obtain
 
 $$
-𝔼_{o\sim\pi_{\text{ref}}}\!\left[\frac{\pi_\theta(o)}{\pi_{\text{ref}}(o)} - \log\frac{\pi_\theta(o)}{\pi_{\text{ref}}(o)} - 1\right] = D_{KL}(\pi_{\text{ref}}\parallel \pi_\theta).
+𝔼_{o\sim\pi_{\text{ref}}}\left[\frac{\pi_\theta(o)}{\pi_{\text{ref}}(o)} - \log\frac{\pi_\theta(o)}{\pi_{\text{ref}}(o)} - 1\right] = D_{KL}(\pi_{\text{ref}}\parallel \pi_\theta).
 $$
 
 This demonstrates that the term
