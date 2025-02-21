@@ -12,11 +12,9 @@ $$
 J(\theta) = 𝔼_{q \sim P(Q), o \sim \pi_\theta(O \mid q)}[r(q, o)]
 $$
 
-Here, $J(\theta)$ is the **objective** we want to maximize, $r(q, o)$ is the reward obtained by generating the complete output $o$ in response to a prompt $q$. The notation $q \sim P(Q)$ means that we take expectation with respect to the distribution of possible queries, where each query $q$ is sampled from the probability distribution $P(Q)$. Similarly, each complete output $o$ is sampled from our policy (parameterized by $\theta$) which defines a probability distribution $\pi_\theta(O|q)$ over possible complete outputs given the query.
+Here, $J(\theta)$ is the **objective** we want to maximize, $r(q, o)$ is the reward obtained by generating the complete output $o$ in response to a prompt $q$. $𝔼$ denotes the **expectation** or the **expected value**. The expectation in statistics is always with respect to some probability distribution. $P(q)$ is the distribution over input prompts. The notation $q \sim P(Q)$ means that we take expectation with respect to the distribution of possible queries, where each query $q$ is sampled from the probability distribution $P(Q)$. Similarly, each complete output $o$ is sampled from our policy (parameterized by $\theta$) which defines a probability distribution $\pi_\theta(O|q)$ over possible complete outputs given the query.
 
-To give an example, let our input be "How much is 1+1?". This is our $q$. Assume that tokenization is made by words. The probability that our policy $\pi_\theta$ produces the output sequence "The answer is 2." that we denote as $\pi_\theta(\text{The answer is 2.} \mid \text{How much is 1+1?})$ is given by $\pi_\theta(\text{The}\mid \text{How much is 1+1?})$ multiplied by $\pi_\theta(\text{answer} \mid \text{How much is 1+1? The})$ multiplied by $\pi_\theta(\text{is} \mid \text{How much is 1+1? The answer})$, $\ldots$, multiplied by $\pi_\theta(\text{.} \mid \text{How much is 1+1? The answer is 2})$. 
-
-Given a policy $\pi_\theta$, the probability to generate a complete sequence $o$ is given by the product of probabilities 
+To give an example, let our input be "How much is 1+1?". This is our $q$. Assume that tokenization is made by words. The probability that our policy $\pi_\theta$ produces the output sequence "The answer is 2." that we denote as $\pi_\theta(\text{The answer is 2.} \mid \text{How much is 1+1?})$ is given by $\pi_\theta(\text{The}\mid \text{How much is 1+1?})$ multiplied by $\pi_\theta(\text{answer} \mid \text{How much is 1+1? The})$ multiplied by $\pi_\theta(\text{is} \mid \text{How much is 1+1? The answer})$, $\ldots$, multiplied by $\pi_\theta(\text{.} \mid \text{How much is 1+1? The answer is 2})$.
 
 ### 2. Deriving the Gradient of the Objective
 
@@ -28,11 +26,17 @@ $$
 J(\theta) = 𝔼_{q\sim P(q)}\Bigl[𝔼_{o \sim \pi_\theta(\cdot \mid q)}[ r(q,o)]\Bigr]
 $$
 
-Here, $P(q)$, the distribution over prompts, is independent of $\theta$, because we randomly sample prompts from the training dataset. Because $P(q)$ does not depend on $\theta$, we can bring the gradient inside the outer expectation:
+Here, $𝔼$ denotes the expectation or the expected value. The expectation is always with respect to some probability distribution. $P(q)$, the distribution over input prompts. It is independent of $\theta$, because we randomly sample prompts from the training dataset.
+
+> The notation $q\sim P(q)$ means "when values $q$ are sampled (or drawn) from the distribution $P$ according to the probability $P(q)$ the distribution $P$ assigns to the output with value equal to $q$."
+
+Because $P(q)$ does not depend on $\theta$ (so we can treat it as a constant term), by using constant multiple rule of differentiation we can bring the gradient inside the outer expectation:
 
 $$
 \nabla_\theta J(\theta) = 𝔼_{q\sim P(q)}\Bigl[\nabla_\theta 𝔼_{o \sim \pi_\theta(\cdot \mid q)}[r(q,o)]\Bigr]
 $$
+
+> The **constant multiple rule** of differentiation states that the derivative of a constant multiplied by a function equals the constant times the derivative of the function: $\frac{\partial}{\partial x} [c \cdot f(x)] = c \cdot \frac{\partial}{\partial x} f(x)$.
 
 Inside the inner expectation, we then differentiate with respect to $\theta$:
 
