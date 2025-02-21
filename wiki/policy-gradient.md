@@ -16,7 +16,7 @@ Here, $J(\theta)$ is the **objective** we want to maximize, $r(q, o)$ is the rew
 
 To give an example, let our input be "How much is 1+1?". This is our $q$. Assume that tokenization is made by words. The probability that our policy $\pi_\theta$ produces the output sequence "The answer is 2." that we denote as $\pi_\theta(\text{The answer is 2.} \mid \text{How much is 1+1?})$ is given by $\pi_\theta(\text{The}\mid \text{How much is 1+1?})$ multiplied by $\pi_\theta(\text{answer} \mid \text{How much is 1+1? The})$ multiplied by $\pi_\theta(\text{is} \mid \text{How much is 1+1? The answer})$, $\ldots$, multiplied by $\pi_\theta(\text{.} \mid \text{How much is 1+1? The answer is 2})$. 
 
-Given a policy $\pi_theta$, the probability to generate a complete sequence $o$ is given by the product of probabilities 
+Given a policy $\pi_\theta$, the probability to generate a complete sequence $o$ is given by the product of probabilities 
 
 ### 2. Deriving the Gradient of the Objective
 
