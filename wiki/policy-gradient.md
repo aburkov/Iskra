@@ -1,6 +1,8 @@
-## Policy Gradient
+## Policy Gradient Methods and the REINFORCE algorithm
 
-In policy gradient methods for reinforcement learning, we want to adjust the parameters of our policy $\pi_\theta$ so that outputs (which are the complete text completions that the language model generates) that lead to high rewards become more likely. The key steps are as follows:
+In policy gradient methods for reinforcement learning, we want to adjust the parameters of our policy $\pi_\theta$ (the model that returns a distribution over actions for a given state of the environment) so that the actions that lead to high rewards become more likely. While rewards in reinforcement learning can come, depending on the environemnt, after each action executed by the agent, we are specifically interested in a more realistic scenario, where a reward is only obtained from the environemnt after the agent reaches some final state, which can be the state in which the task is completed (in which case the reward is usually high) or failed (low reward). In the case of training a neural language model, where indiviadual actions are predicted tokens, such a final state is usually a full generated text in response to a certain input prompt. We denote by $q$ the input query (which corresponds to the initial environment state) and by $o$, the entire generated sequence when the query $q$ is the input.
+
+The key steps in policy gradient are as follows:
 
 ### 1. Starting from the Objective
 
@@ -11,6 +13,10 @@ J(\theta) = 𝔼_{q \sim P(Q), o \sim \pi_\theta(O \mid q)}[r(q, o)]
 $$
 
 Here, $J(\theta)$ is the **objective** we want to maximize, $r(q, o)$ is the reward obtained by generating the complete output $o$ in response to a prompt $q$. The notation $q \sim P(Q)$ means that we take expectation with respect to the distribution of possible queries, where each query $q$ is sampled from the probability distribution $P(Q)$. Similarly, each complete output $o$ is sampled from our policy (parameterized by $\theta$) which defines a probability distribution $\pi_\theta(O|q)$ over possible complete outputs given the query.
+
+To give an example, let our input be "How much is 1+1?". This is our $q$. Assume that tokenization is made by words. The probability that our policy $\pi_\theta$ produces the output sequence "The answer is 2." that we denote as $\pi_\theta(\text{The answer is 2.} \mid \text{How much is 1+1?}) is given by $\pi_\theta(\text{The}\mid \text{How much is 1+1?})$ multiplied by $\pi_\theta(\text{answer} \mid \text{How much is 1+1? The})$ multiplied by $\pi_\theta(\text{is} \mid \text{How much is 1+1? The answer}), $\ldots$, multiplied by $\pi_\theta(\text{.} \mid \text{How much is 1+1? The answer is 2})$. 
+
+Given a policy $\pi_theta$, the probability to generate a complete sequence $o$ is given by the product of probabilities 
 
 ### 2. Deriving the Gradient of the Objective
 
