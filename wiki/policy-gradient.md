@@ -1,4 +1,4 @@
-# Policy Gradient Methods and the REINFORCE algorithm
+# Policy Gradient Methods and the REINFORCE Algorithm
 
 In policy gradient methods for reinforcement learning, we want to adjust the parameters $\theta$ of our parametrized policy $\pi_\theta$ (the model that returns a distribution over actions for a given state of the environment) so that the actions that lead to high rewards become more likely.
 
