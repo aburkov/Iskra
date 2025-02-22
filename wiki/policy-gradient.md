@@ -109,9 +109,10 @@ where:
 
 - $\alpha$ is the **learning rate**, a positive constant that controls how big each update step is,
 - $\hat{g}$ is our estimated gradient, calculated as:
-  $$
-  \hat{g} = r(q,o)\nabla_\theta \log \pi_\theta(o \mid q)
-  $$
+
+$$
+\hat{g} = r(q,o)\nabla_\theta \log \pi_\theta(o \mid q)
+$$
 
 Notice that we sample a single query $q$ and a single output $o$ in each update. In practice, we often average this over a mini-batch of samples to make the update more stable.
 
