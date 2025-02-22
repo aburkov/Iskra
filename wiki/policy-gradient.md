@@ -139,12 +139,10 @@ Let’s break down the algorithm into clear steps:
 3. **Compute the Reward**: Obtain the reward $r(q, o)$ from the environment. In our case, this reward is given only at the end of the sequence, based on how well the complete output $o$ meets the desired criteria.
 
 4. **Calculate the Gradient**: Compute the gradient of the log-probability of the generated output with respect to the policy parameters:
-
 $$
 \nabla_\theta \log \pi_\theta(o \mid q)
 $$
-
-   This step involves backpropagation through the neural network that defines the policy.
+This step involves backpropagation through the neural network that defines the policy.
 
 5. **Scale by the reward**: Multiply the gradient by the reward $r(q,o)$. This scaling makes it so that outputs with higher rewards have a larger influence on the update:
 
