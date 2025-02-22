@@ -15,9 +15,9 @@ Iskra is a simple wiki system that uses Markdown files for content. Here's an ex
 
 $$
 \begin{align}
-\nabla \cdot \mathbf{E} &= \frac{\rho}{\varepsilon_0} \\
-\nabla \cdot \mathbf{B} &= 0 \\
-\nabla \times \mathbf{E} &= -\frac{\partial \mathbf{B}}{\partial t} \\
+\nabla \cdot \mathbf{E} &= \frac{\rho}{\varepsilon_0} \\\
+\nabla \cdot \mathbf{B} &= 0 \\\
+\nabla \times \mathbf{E} &= -\frac{\partial \mathbf{B}}{\partial t} \\\
 \nabla \times \mathbf{B} &= \mu_0\left(\mathbf{J} + \varepsilon_0\frac{\partial \mathbf{E}}{\partial t}\right)
 \end{align}
 $$
