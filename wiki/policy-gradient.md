@@ -248,7 +248,7 @@ $$
 When the baseline $V(q)$ is independent of the output $o$, the expected gradient remains unchanged. This is because
 
 $$
-𝔼_{o\sim\pi_\theta(O \mid q)}\Bigl[V(q) \, \nabla_\theta \log \pi_\theta(o \mid q)\Bigr] = V(q),
+𝔼_{o\sim\pi_\theta(O \mid q)}\Bigl[V(q) \nabla_\theta \log \pi_\theta(o \mid q)\Bigr] = V(q),
 $$
 
 and
