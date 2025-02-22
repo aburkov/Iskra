@@ -156,7 +156,7 @@ $$
    Adjust the policy parameters in the direction of the gradient:
 
 $$
-\theta \leftarrow \theta + \alpha \, r(q,o) \nabla_\theta \log \pi_\theta(o \mid q)
+\theta \leftarrow \theta + \alpha r(q,o) \nabla_\theta \log \pi_\theta(o \mid q)
 $$
 
    In practice, you might collect several samples before updating, so you would average the gradient estimates over a mini-batch.
@@ -231,7 +231,7 @@ Here's what's going on in line ➊:
 In the basic REINFORCE formulation, the policy gradient update is expressed as
 
 $$
-\nabla_\theta J(\theta) = 𝔼_{q\sim P(q),\, o\sim \pi_\theta(O \mid q)}\Bigl[r(q,o) \, \nabla_\theta \log \pi_\theta(o \mid q)\Bigr],
+\nabla_\theta J(\theta) = 𝔼_{q\sim P(q), o\sim \pi_\theta(O \mid q)}\Bigl[r(q,o) \nabla_\theta \log \pi_\theta(o \mid q)\Bigr],
 $$
 
 where $r(q,o)$ denotes the reward obtained after generating the complete output $o$ in response to the query $q$.
@@ -253,7 +253,7 @@ is called the **advantage**. The advantage indicates how much better or worse th
 Replacing the reward $r(q,o)$ with the advantage $A(q,o)$ in the gradient update yields
 
 $$
-\nabla_\theta J(\theta) \approx 𝔼_{q\sim P(q),\, o\sim \pi_\theta(O \mid q)}\Bigl[A(q,o) \, \nabla_\theta \log \pi_\theta(o \mid q)\Bigr].
+\nabla_\theta J(\theta) \approx 𝔼_{q\sim P(q), o\sim \pi_\theta(O \mid q)}\Bigl[A(q,o) \nabla_\theta \log \pi_\theta(o \mid q)\Bigr].
 $$
 
 When the baseline $V(q)$ is independent of the output $o$, the expected gradient remains unchanged. This is because
