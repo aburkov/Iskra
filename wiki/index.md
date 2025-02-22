@@ -14,7 +14,7 @@ Iskra is a simple wiki system that uses Markdown files for content. Here's an ex
 - **LaTeX Math Support:** Write inline math, e.g. $E = mc^2$, or display equations:
 
 $$
-\nabla \times \mathbf{B} &= \mu_0\left(\mathbf{J} + \varepsilon_0\frac{\partial \mathbf{E}}{\partial t}
+\nabla \times \mathbf{B} = \mu_0\left(\mathbf{J} + \varepsilon_0\frac{\partial \mathbf{E}}{\partial t}
 $$
 
 - **Section Navigation:** Jump directly to sections within your articles. Try it with the minimized menu on the lift.
