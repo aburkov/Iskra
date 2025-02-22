@@ -303,13 +303,13 @@ $$
 Recognizing that this weighted sum is exactly the expectation of the score function under $\pi_\theta$, we have:
 
 $$
-\mathbb{E}_{o\sim\pi_\theta(O \mid q)}\bigl[\nabla_\theta \log \pi_\theta(o \mid q)\bigr] = 0.
+𝔼_{o\sim\pi_\theta(O \mid q)}\bigl[\nabla_\theta \log \pi_\theta(o \mid q)\bigr] = 0.
 $$
 
 This derivation is often referred to as the **score function property** and is a key step in the **likelihood ratio trick**, which is widely used in methods like policy gradient.
 
 ---
 
-In this refined formulation, outputs that yield rewards higher than the expected baseline (i.e., a positive advantage) are reinforced, while those yielding lower-than-expected rewards (i.e., a negative advantage) are discouraged. This adjustment improves the assignment of credit to the generated outputs and reduces the variance in the gradient estimates, leading to a more stable learning process.
+In this refined formulation of the REINFORCE algorithm, outputs that yield rewards higher than the expected baseline (i.e., a positive advantage) are reinforced, while those yielding lower-than-expected rewards (i.e., a negative advantage) are discouraged. This adjustment improves the assignment of credit to the generated outputs and reduces the variance in the gradient estimates, leading to a more stable learning process.
 
 This formulation, which leverages the difference between $Q(q,o)$ and $V(q)$ to compute the advantage, is a fundamental component of [actor-critic methods](actor-critic.md). In actor-critic approaches, the policy $\pi_\theta$ (the actor) selects outputs, while a separate mechanism (the critic) estimates $V(q)$. The critic’s evaluation provides the necessary information to calculate the advantage, thereby guiding the policy updates more effectively.
