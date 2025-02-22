@@ -248,13 +248,7 @@ $$
 When the baseline $V(q)$ is independent of the output $o$, the expected gradient remains unchanged. This is because
 
 $$
-𝔼_{o\sim\pi_\theta(O \mid q)}\Bigl[V(q) \nabla_\theta \log \pi_\theta(o \mid q)\Bigr] = V(q),
-$$
-
-and
-
-$$
-𝔼_{o\sim\pi_\theta(O \mid q)}\Bigl[\nabla_\theta \log \pi_\theta(o \mid q)\Bigr] = 0,
+𝔼_{o\sim\pi_\theta(O \mid q)}\Bigl[V(q) \nabla_\theta \log \pi_\theta(o \mid q)\Bigr] = V(q) \cdot 𝔼_{o\sim\pi_\theta(O \mid q)}\Bigl[\nabla_\theta \log \pi_\theta(o \mid q)\Bigr] = V(q) \cdot 0 = 0
 $$
 
 so subtracting $V(q)$ does not alter the expected gradient when averaged over the policy’s outputs. For this property to hold, the function $Q(q,o)$ must be chosen such that its expectation over the outputs equals the baseline $V(q)$; in other words, $V(q) = 𝔼_{o\sim\pi_\theta(O \mid q)}[Q(q,o)]$. This consistency ensures that using $A(q,o)$ instead of $r(q,o)$ results in an unbiased gradient estimate.
