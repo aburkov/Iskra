@@ -46,36 +46,44 @@ $$
 
 > The **constant multiple rule** of differentiation states that the derivative of a constant multiplied by a function equals the constant times the derivative of the function: $\frac{\partial}{\partial x} [c \cdot f(x)] = c \cdot \frac{\partial}{\partial x} f(x)$, therefore $\nabla c \cdot f(x) = c \cdot \nabla f(x)$.
 
-Inside the inner expectation, we then differentiate with respect to $\theta$:
+Inside the inner expectation, we can first express it as a sum over all possible outputs:
 
 $$
-𝔼_{o \sim \pi_\theta(O \mid q)}[r(q,o)] = \sum_{o} \pi_\theta(o \mid q)r(q,o),
+𝔼_{o \sim \pi_\theta(O \mid q)}[r(q,o)] = \sum_{o \in O} \pi_\theta(o \mid q)r(q,o)
 $$
 
 where $\pi_\theta(o \mid q)$ is the probability that the policy $\pi_\theta(O \mid q)$ assign to output sequence $o$ given the input query $q$.
 
-Taking the gradient with respect to $\theta$ and applying [the log-derivative trick](log_derivative_trick.md):
+Taking the gradient with respect to $\theta$ of the sum over all possible outputs:
 
 $$
-\nabla_\theta \pi_\theta(o \mid q) = \pi_\theta(o \mid q) \nabla_\theta \log \pi_\theta(o \mid q),
+\nabla_\theta \sum_{o \in O} \pi_\theta(o \mid q)r(q,o) = \sum_{o \in O} r(q,o)\nabla_\theta \pi_\theta(o \mid q)
 $$
 
-we obtain:
+We can apply [the log-derivative trick](log_derivative_trick.md), which states that for any function $f(\theta)$:
 
 $$
-\nabla_\theta 𝔼_{o \sim \pi_\theta(O \mid q)}[ r(q,o) ] = \sum_{o} r(q,o)\pi_\theta(o \mid q)\nabla_\theta \log \pi_\theta(o \mid q)
+\nabla_\theta f(\theta) = f(\theta)\nabla_\theta \log f(\theta)
+$$
+
+This identity follows from the chain rule and the fact that $\nabla_\theta \log f(\theta) = \frac{\nabla_\theta f(\theta)}{f(\theta)}$.
+
+Applying this to our policy gradient by substituting $f(\theta) = \pi_\theta(o \mid q)$:
+
+$$
+\nabla_\theta \pi_\theta(o \mid q) = \pi_\theta(o \mid q)\nabla_\theta \log \pi_\theta(o \mid q)
+$$
+
+Therefore:
+
+$$
+\sum_{o \in O} r(q,o)\nabla_\theta \pi_\theta(o \mid q) = \sum_{o} r(q,o)\pi_\theta(o \mid q)\nabla_\theta \log \pi_\theta(o \mid q)
 $$
 
 This can be written in expectation form as:
 
 $$
 \nabla_\theta 𝔼_{o \sim \pi_\theta(O \mid q)}[r(q,o)] = 𝔼_{o \sim \pi_\theta(O \mid q)}\Bigl[r(q,o)\nabla_\theta \log \pi_\theta(o \mid q)\Bigr]
-$$
-
-Now, plugging this back into the full gradient, we have:
-
-$$
-\nabla_\theta J(\theta) = 𝔼_{q\sim P(q)}\Bigl[𝔼_{o \sim \pi_\theta(O \mid q)}\bigl[r(q,o)\nabla_\theta \log \pi_\theta(o \mid q) \bigr]\Bigr]
 $$
 
 Now that we have derived the gradient of our objective with respect to the policy parameters, we are ready to explain how we use this result in practice. This leads us to the REINFORCE algorithm, a simple yet powerful method for training policies in reinforcement learning.
@@ -158,25 +166,25 @@ In the basic REINFORCE setup where the reward is only provided at the end of the
 1. **Log-probability as a sum:** Remember that the probability of a full sequence is the product of the probabilities of each token:
 
 $$
-\pi_\theta(o \mid q) = \prod_{t=1}^{T} \pi_\theta(a_t \mid s_t),
+\pi_\theta(o \mid q) = \prod_{t=1}^{T} \pi_\theta(a_t \mid q, a_1, \ldots, a_{t-1})
 $$
    
    where $a_t$ denotes a specific action taken (token generated) at time step $t$. Taking the log, we have:
    
 $$
-\log \pi_\theta(o \mid q) = \sum_{t=1}^{T} \log \pi_\theta(a_t \mid s_t)
+\log \pi_\theta(o \mid q) = \sum_{t=1}^{T} \log \pi_\theta(a_t \mid q, a_1, \ldots, a_{t-1})
 $$
    
    The sum rule of differentiation tells us that the gradient of the log-probability is:
    
 $$
-\nabla_\theta \log \pi_\theta(o \mid q) = \sum_{t=1}^{T} \nabla_\theta \log \pi_\theta(a_t \mid s_t)
+\nabla_\theta \log \pi_\theta(o \mid q) = \sum_{t=1}^{T} \nabla_\theta \log \pi_\theta(a_t \mid q, a_1, \ldots, a_{t-1})
 $$
 
 2. **Multiplying by the reward:** We then multiply this sum by the reward $r(q, o)$ received at the end:
 
 $$
-r(q, o) \nabla_\theta \log \pi_\theta(o \mid q) = r(q, o) \sum_{t=1}^{T} \nabla_\theta \log \pi_\theta(a_t \mid s_t)
+r(q, o) \nabla_\theta \log \pi_\theta(o \mid q) = r(q, o) \sum_{t=1}^{T} \nabla_\theta \log \pi_\theta(a_t \mid q, a_1, \ldots, a_{t-1})
 $$
 
    So effectively, the reward $r(q, o)$ scales the gradient for each token in the sequence. Each token's contribution to the overall gradient is increased (or decreased) proportionally by the same reward.
@@ -211,9 +219,10 @@ In this code, `get_policy_and_data` is assumed to provide both the policy networ
 
 Here's what's going on in line ➊:
 
-- Normally, we use gradient ascent to maximize the expected reward. However, optimizers in PyTorch perform gradient descent. By taking the negative of our objective, we turn the maximization problem into a minimization problem. The log probabilities for the output sequence are returned per token.
-- We sum these along the sequence dimension `(dim=1)` to obtain the log probability for the entire sequence. This sum represents the log of the product of the probabilities of each token in the sequence. We calculate the average loss over the mini-batch. This ensures that the magnitude of the gradient does not depend on the batch size, leading to a more stable training process.
-- By using applying `.mean()`, we calculate the average loss over the mini-batch. This ensures that the magnitude of the gradient does not depend on the batch size, leading to a more stable training process.
+- Normally, we use gradient ascent to maximize the expected reward. However, optimizers in PyTorch perform gradient descent. By taking the negative of our objective, we turn the maximization problem into a minimization problem.
+- The log probabilities are returned per token in the sequence. We sum these along the sequence dimension `(dim=1)` to obtain the log probability for the entire sequence. This sum represents the log of the product of the probabilities of each token in the sequence, since $\log(a \cdot b) = \log(a) + \log(b)$.
+- These sequence-level log probabilities are then multiplied by their corresponding rewards element-wise.
+- Finally, we take the mean over the mini-batch to calculate the average loss. This ensures that the magnitude of the gradient does not depend on the batch size, leading to a more stable training process.
 
 ## From Rewards to Advantages
 
@@ -251,62 +260,50 @@ $$
 𝔼_{o\sim\pi_\theta(O \mid q)}\Bigl[V(q) \nabla_\theta \log \pi_\theta(o \mid q)\Bigr] = V(q) \cdot 𝔼_{o\sim\pi_\theta(O \mid q)}\Bigl[\nabla_\theta \log \pi_\theta(o \mid q)\Bigr] = V(q) \cdot 0 = 0
 $$
 
-so subtracting $V(q)$ does not alter the expected gradient when averaged over the policy’s outputs. For this property to hold, the function $Q(q,o)$ must be chosen such that its expectation over the outputs equals the baseline $V(q)$; in other words, $V(q) = 𝔼_{o\sim\pi_\theta(O \mid q)}[Q(q,o)]$. This consistency ensures that using $A(q,o)$ instead of $r(q,o)$ results in an unbiased gradient estimate.
-
-An attentive reader might wonder why $𝔼_{o\sim\pi_\theta(O \mid q)}\Bigl[\nabla_\theta \log \pi_\theta(o \mid q)\Bigr] = 0$. Let's see why.
-
-The property $𝔼_{o\sim\pi_\theta(O \mid q)}\Bigl[\nabla_\theta \log \pi_\theta(o \mid q)\Bigr] = 0$ is fundamental and comes from how probability distributions work. The key insight is that the sum (or integral) of probabilities over all possible outcomes equals 1, and this remains true as we change the parameters $\theta$.
-
-For any probability distribution $\pi_\theta$, we know:
+so subtracting $V(q)$ does not alter the expected gradient when averaged over the policy’s outputs. For this property to hold, no special constraints on $Q(q,o)$ are needed beyond its standard definition as the expected future reward when generating output $o$ in response to query $q$. The baseline $V(q)$ is defined as the expectation of $Q(q,o)$ under the policy:
 
 $$
-\sum_o \pi_\theta(o|q) = 1
+V(q) = 𝔼_{o\sim\pi_\theta(O \mid q)}[Q(q,o)]
 $$
 
-This sum is over all possible outputs $o$ for a given query $q$.
+This definition of $V(q)$ ensures that using $A(q,o)$ instead of $r(q,o)$ results in an unbiased gradient estimate. This is because $V(q)$ is constructed to be exactly the expected value of $Q(q,o)$, making it a valid baseline that preserves the expected gradient while reducing its variance.
 
-Since this equality holds for all $\theta$, its derivative with respect to $\theta$ must be zero:
-
-$$
-\frac{\partial}{\partial \theta} \left[\sum_o \pi_\theta(o|q)\right] = \sum_o \frac{\partial}{\partial \theta}[\pi_\theta(o|q)] = 0
-$$
-
-This folows from a fundamental principle from calculus that states that if a quantity is always equal to a constant (in this case, 1), its derivative must be zero. Here's why.
-
-Let's say we have a function $f(\theta)$ that equals 1 for all values of $\theta$:
-   
-$$
-f(\theta) = 1 \quad \text{for all } \theta
-$$
-
-The derivative $\frac{d}{d\theta}f(\theta)$ measures how $f(\theta)$ changes as we make tiny changes to $\theta$, but $f(\theta)$ doesn't change at all (it's always 1!) mo matter what value of $\theta$ we pick, $f(\theta)$ stays at 1.
-
-Therefore, the rate of change must be zero:
-   
-$$
-\frac{d}{d\theta}f(\theta) = 0
-$$
-
-In our case, we have:
+An attentive reader might wonder why
 
 $$
-\sum_o \pi_\theta(o|q) = 1 \quad \text{for all } \theta
+𝔼_{o\sim\pi_\theta(O \mid q)}\bigl[\nabla_\theta \log \pi_\theta(o \mid q)\bigr] = 0.
 $$
 
-This is exactly like the situation above—the left side must equal 1 for any $\theta$ we choose (otherwise probabilities wouldn't sum to 1). Therefore, its derivative with respect to $\theta$ must be zero.
+Let's see why.
 
-This is a key property in probability theory: the sum of probabilities must always equal 1, so the derivative of this sum with respect to any parameter must be zero — otherwise, there would be some value of the parameter where probabilities don't sum to 1!
-
-Now, we are back to showing why $𝔼_{o\sim\pi_\theta(O \mid q)}\Bigl[\nabla_\theta \log \pi_\theta(o \mid q)\Bigr] = 0. Using the chain rule:
+First, recall that for any probability distribution $\pi_\theta(o \mid q)$, we have:
 
 $$
-\sum_o \pi_\theta(o|q) \cdot \frac{\partial}{\partial \theta}[\log \pi_\theta(o|q)] = 0
+\sum_o \pi_\theta(o \mid q) = 1.
 $$
 
-This sum weighted by probabilities is exactly what an expectation is:
+Because this equality holds for all $\theta$, differentiating both sides with respect to $\theta$ gives:
 
 $$
-\mathbb{E}_{o\sim\pi_\theta(O|q)}[\nabla_\theta \log \pi_\theta(o|q)] = 0
+\nabla_\theta \left[\sum_o \pi_\theta(o \mid q)\right] = \sum_o \nabla_\theta \pi_\theta(o \mid q) = 0.
+$$
+
+Next, by applying the log-derivative trick, we know that:
+
+$$
+\nabla_\theta \pi_\theta(o \mid q) = \pi_\theta(o \mid q) \nabla_\theta \log \pi_\theta(o \mid q).
+$$
+
+Substituting this into the previous sum yields:
+
+$$
+\sum_o \pi_\theta(o \mid q) \nabla_\theta \log \pi_\theta(o \mid q) = 0.
+$$
+
+Recognizing that this weighted sum is exactly the expectation of the score function under $\pi_\theta$, we have:
+
+$$
+\mathbb{E}_{o\sim\pi_\theta(O \mid q)}\bigl[\nabla_\theta \log \pi_\theta(o \mid q)\bigr] = 0.
 $$
 
 This derivation is often referred to as the **score function property** and is a key step in the **likelihood ratio trick**, which is widely used in methods like policy gradient.
