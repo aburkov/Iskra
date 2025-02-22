@@ -33,7 +33,7 @@ To maximize a function, and our objective is a function of input states, we calc
 We can rewrite the objective as follows:
 
 $$
-J(\theta) = 𝔼_{q\sim P(q)}\Bigl[𝔼_{o \sim \pi_\theta(\cdot \mid q)}[ r(q, o)]\Bigr]
+J(\theta) = 𝔼_{q\sim P(q)}\Bigl[𝔼_{o \sim \pi_\theta(O \mid q)}[ r(q, o)]\Bigr]
 $$
 
 $P(q)$, the distribution over the initial states (input prompts), is independent of $\theta$, because we randomly sample prompts from the training dataset.
@@ -41,7 +41,7 @@ $P(q)$, the distribution over the initial states (input prompts), is independent
 Because $P(q)$ does not depend on $\theta$ (so we can treat it as a constant term), by using constant multiple rule of differentiation we can bring the gradient inside the outer expectation:
 
 $$
-\nabla_\theta J(\theta) = 𝔼_{q\sim P(q)}\Bigl[\nabla_\theta 𝔼_{o \sim \pi_\theta(\cdot \mid q)}[r(q,o)]\Bigr]
+\nabla_\theta J(\theta) = 𝔼_{q\sim P(q)}\Bigl[\nabla_\theta 𝔼_{o \sim \pi_\theta(O \mid q)}[r(q,o)]\Bigr]
 $$
 
 > The **constant multiple rule** of differentiation states that the derivative of a constant multiplied by a function equals the constant times the derivative of the function: $\frac{\partial}{\partial x} [c \cdot f(x)] = c \cdot \frac{\partial}{\partial x} f(x)$, therefore $\nabla c \cdot f(x) = c \cdot \nabla f(x)$.
@@ -49,7 +49,7 @@ $$
 Inside the inner expectation, we then differentiate with respect to $\theta$:
 
 $$
-𝔼_{o \sim \pi_\theta(\cdot \mid q)}[r(q,o)] = \sum_{o} \pi_\theta(o \mid q)r(q,o),
+𝔼_{o \sim \pi_\theta(O \mid q)}[r(q,o)] = \sum_{o} \pi_\theta(o \mid q)r(q,o),
 $$
 
 where $\pi_\theta(o \mid q)$ is the probability that the policy $\pi_\theta(O \mid q)$ assign to output sequence $o$ given the input query $q$.
@@ -63,13 +63,13 @@ $$
 we obtain:
 
 $$
-\nabla_\theta 𝔼_{o \sim \pi_\theta(\cdot \mid q)}[ r(q,o) ] = \sum_{o} r(q,o)\pi_\theta(o \mid q)\nabla_\theta \log \pi_\theta(o \mid q)
+\nabla_\theta 𝔼_{o \sim \pi_\theta(O \mid q)}[ r(q,o) ] = \sum_{o} r(q,o)\pi_\theta(o \mid q)\nabla_\theta \log \pi_\theta(o \mid q)
 $$
 
 This can be written in expectation form as:
 
 $$
-\nabla_\theta 𝔼_{o \sim \pi_\theta(\cdot \mid q)}[r(q,o)] = 𝔼_{o \sim \pi_\theta(O \mid q)}\Bigl[r(q,o)\nabla_\theta \log \pi_\theta(o \mid q)\Bigr]
+\nabla_\theta 𝔼_{o \sim \pi_\theta(O \mid q)}[r(q,o)] = 𝔼_{o \sim \pi_\theta(O \mid q)}\Bigl[r(q,o)\nabla_\theta \log \pi_\theta(o \mid q)\Bigr]
 $$
 
 Now, plugging this back into the full gradient, we have:
@@ -85,7 +85,7 @@ Now that we have derived the gradient of our objective with respect to the polic
 The REINFORCE algorithm is a **Monte Carlo policy gradient method**. "Monte Carlo" here means that we estimate our expected values by sampling. In our case, rather than summing over all possible outputs (which would be impossible in most practical scenarios), we sample outputs from our policy and use these samples to estimate the expectation. The key observation from our derivation is that the gradient of the objective is:
 
 $$
-\nabla_\theta J(\theta) = 𝔼_{q\sim P(q), o \sim \pi_\theta(\cdot \mid q)}\Bigl[r(q,o)\nabla_\theta \log \pi_\theta(o \mid q)\Bigr]
+\nabla_\theta J(\theta) = 𝔼_{q\sim P(q), o \sim \pi_\theta(O \mid q)}\Bigl[r(q,o)\nabla_\theta \log \pi_\theta(o \mid q)\Bigr]
 $$
 
 In plain language, this equation tells us:
@@ -129,22 +129,25 @@ Let’s break down the algorithm into clear steps:
 
 4. **Calculate the Gradient**: Compute the gradient of the log-probability of the generated output with respect to the policy parameters:
 
-   $$
-   \nabla_\theta \log \pi_\theta(o \mid q)
-   $$
+$$
+\nabla_\theta \log \pi_\theta(o \mid q)
+$$
 
 	This step involves backpropagation through the neural network that defines the policy.
 
 5. **Scale by the reward**: Multiply the gradient by the reward $r(q,o)$. This scaling makes it so that outputs with higher rewards have a larger influence on the update:
-   $$
-   r(q,o) \nabla_\theta \log \pi_\theta(o \mid q)
-   $$
 
-6. **Update the Parameters**:  
+$$
+r(q,o) \nabla_\theta \log \pi_\theta(o \mid q)
+$$
+
+7. **Update the Parameters**:  
    Adjust the policy parameters in the direction of the gradient:
-   $$
-   \theta \leftarrow \theta + \alpha \, r(q,o) \nabla_\theta \log \pi_\theta(o \mid q)
-   $$
+
+$$
+\theta \leftarrow \theta + \alpha \, r(q,o) \nabla_\theta \log \pi_\theta(o \mid q)
+$$
+
    In practice, you might collect several samples before updating, so you would average the gradient estimates over a mini-batch.
 
 ### Multiplying the Gradient by the Reward
@@ -153,26 +156,28 @@ In the basic REINFORCE setup where the reward is only provided at the end of the
 
 1. **Log-probability as a sum:** Remember that the probability of a full sequence is the product of the probabilities of each token:
 
-   $$
-   \pi_\theta(o \mid q) = \prod_{t=1}^{T} \pi_\theta(a_t \mid s_t),
-   $$
+$$
+\pi_\theta(o \mid q) = \prod_{t=1}^{T} \pi_\theta(a_t \mid s_t),
+$$
    
    where $a_t$ denotes a specific action taken (token generated) at time step $t$. Taking the log, we have:
    
-   $$
-   \log \pi_\theta(o \mid q) = \sum_{t=1}^{T} \log \pi_\theta(a_t \mid s_t)
-   $$
+$$
+\log \pi_\theta(o \mid q) = \sum_{t=1}^{T} \log \pi_\theta(a_t \mid s_t)
+$$
    
    The sum rule of differentiation tells us that the gradient of the log-probability is:
    
-   $$
-   \nabla_\theta \log \pi_\theta(o \mid q) = \sum_{t=1}^{T} \nabla_\theta \log \pi_\theta(a_t \mid s_t)
-   $$
+$$
+\nabla_\theta \log \pi_\theta(o \mid q) = \sum_{t=1}^{T} \nabla_\theta \log \pi_\theta(a_t \mid s_t)
+$$
 
 2. **Multiplying by the reward:** We then multiply this sum by the reward $r(q, o)$ received at the end:
-   $$
-   r(q, o) \nabla_\theta \log \pi_\theta(o \mid q) = r(q, o) \sum_{t=1}^{T} \nabla_\theta \log \pi_\theta(a_t \mid s_t)
-   $$
+
+$$
+r(q, o) \nabla_\theta \log \pi_\theta(o \mid q) = r(q, o) \sum_{t=1}^{T} \nabla_\theta \log \pi_\theta(a_t \mid s_t)
+$$
+
    So effectively, the reward $r(q, o)$ scales the gradient for each token in the sequence. Each token's contribution to the overall gradient is increased (or decreased) proportionally by the same reward.
 
 While we don't distribute different rewards to different tokens in this simple case, you can think of it as the entire sequence receiving one reward, and every action (or token) in that sequence is "credited" or "blamed" equally based on that final reward.
@@ -214,7 +219,7 @@ Here's what's going on in line ➊:
 In the basic REINFORCE formulation, the policy gradient update is expressed as
 
 $$
-\nabla_\theta J(\theta) = 𝔼_{q\sim P(q),\, o\sim \pi_\theta(\cdot \mid q)}\Bigl[r(q,o) \, \nabla_\theta \log \pi_\theta(o \mid q)\Bigr],
+\nabla_\theta J(\theta) = 𝔼_{q\sim P(q),\, o\sim \pi_\theta(O \mid q)}\Bigl[r(q,o) \, \nabla_\theta \log \pi_\theta(o \mid q)\Bigr],
 $$
 
 where $r(q,o)$ denotes the reward obtained after generating the complete output $o$ in response to the query $q$.
@@ -222,7 +227,7 @@ where $r(q,o)$ denotes the reward obtained after generating the complete output 
 Using the raw reward $r(q,o)$ directly can result in gradient estimates with high variance. An improved strategy refines this update by comparing the received reward with an expected reward for the query. This comparison can enabled by considering two functions. The first is the **action-value function** $Q(q,o)$, which represents the expected reward when generating the specific output $o$ in response to $q$. The second is the **value function** $V(q)$, which estimates the expected reward for the query $q$ over all possible outputs, serving as a **baseline**. In many implementations of policy gradient methods that incorporate value estimation, $V(q)$ is defined as
 
 $$
-V(q) = 𝔼_{o\sim\pi_\theta(\cdot \mid q)}\bigl[Q(q,o)\bigr]
+V(q) = 𝔼_{o\sim\pi_\theta(O \mid q)}\bigl[Q(q,o)\bigr]
 $$
 
 The difference between these two functions,
@@ -236,16 +241,16 @@ is called the **advantage**. The advantage indicates how much better or worse th
 Replacing the reward $r(q,o)$ with the advantage $A(q,o)$ in the gradient update yields
 
 $$
-\nabla_\theta J(\theta) \approx 𝔼_{q\sim P(q),\, o\sim \pi_\theta(\cdot \mid q)}\Bigl[A(q,o) \, \nabla_\theta \log \pi_\theta(o \mid q)\Bigr].
+\nabla_\theta J(\theta) \approx 𝔼_{q\sim P(q),\, o\sim \pi_\theta(O \mid q)}\Bigl[A(q,o) \, \nabla_\theta \log \pi_\theta(o \mid q)\Bigr].
 $$
 
 When the baseline $V(q)$ is independent of the output $o$, the expected gradient remains unchanged. This is because
 
 $$
-𝔼_{o\sim\pi_\theta(\cdot \mid q)}\Bigl[V(q) \, \nabla_\theta \log \pi_\theta(o \mid q)\Bigr] = V(q) \, 𝔼{E}_{o\sim\pi_\theta(\cdot \mid q)}\Bigl[\nabla_\theta \log \pi_\theta(o \mid q)\Bigr] = 0,
+𝔼_{o\sim\pi_\theta(O \mid q)}\Bigl[V(q) \, \nabla_\theta \log \pi_\theta(o \mid q)\Bigr] = V(q) \, 𝔼{E}_{o\sim\pi_\theta(O \mid q)}\Bigl[\nabla_\theta \log \pi_\theta(o \mid q)\Bigr] = 0,
 $$
 
-so subtracting $V(q)$ does not alter the expected gradient when averaged over the policy’s outputs. For this property to hold, the function $Q(q,o)$ must be chosen such that its expectation over the outputs equals the baseline $V(q)$; in other words, $V(q) = 𝔼_{o\sim\pi_\theta(\cdot \mid q)}[Q(q,o)]$. This consistency ensures that using $A(q,o)$ instead of $r(q,o)$ results in an unbiased gradient estimate.
+so subtracting $V(q)$ does not alter the expected gradient when averaged over the policy’s outputs. For this property to hold, the function $Q(q,o)$ must be chosen such that its expectation over the outputs equals the baseline $V(q)$; in other words, $V(q) = 𝔼_{o\sim\pi_\theta(O \mid q)}[Q(q,o)]$. This consistency ensures that using $A(q,o)$ instead of $r(q,o)$ results in an unbiased gradient estimate.
 
 In this refined formulation, outputs that yield rewards higher than the expected baseline (i.e., a positive advantage) are reinforced, while those yielding lower-than-expected rewards (i.e., a negative advantage) are discouraged. This adjustment improves the assignment of credit to the generated outputs and reduces the variance in the gradient estimates, leading to a more stable learning process.
 
