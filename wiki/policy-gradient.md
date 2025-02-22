@@ -2,6 +2,8 @@
 
 In policy gradient methods for reinforcement learning, we want to adjust the parameters $\theta$ of our parametrized policy $\pi_\theta$ (the model that returns a distribution over actions for a given state of the environment) so that the actions that lead to high rewards become more likely.
 
+> This article is part of a series that will serve as building blocks for *The Hundred-Page Reinforcement Learning Book* by Andriy Burkov. The book is still in progress and is expected to be published by late 2025. To stay updated, subscribe to the [newsletter](https://aiweekly.substack.com/).
+
 While rewards in reinforcement learning could come, depending on the environment, after each action executed by the agent, we are specifically interested in a more realistic scenario, where a reward is only obtained from the environment after the agent reaches some final state, which can be the state in which the task is completed (in which case the reward is usually high) or failed (low reward).
 
 In the case of training a neural language model, where individual actions are predicted tokens, such a final state is usually a full generated text in response to a certain input prompt seen as the agent's initial state in the environment. We denote by $q$ the input query (which corresponds to the initial environment state) and by $o$, the entire generated sequence when the query $q$ is the input.
