@@ -133,7 +133,7 @@ $$
 \nabla_\theta \log \pi_\theta(o \mid q)
 $$
 
-	This step involves backpropagation through the neural network that defines the policy.
+   This step involves backpropagation through the neural network that defines the policy.
 
 5. **Scale by the reward**: Multiply the gradient by the reward $r(q,o)$. This scaling makes it so that outputs with higher rewards have a larger influence on the update:
 
