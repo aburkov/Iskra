@@ -90,7 +90,7 @@ $$
 
 In plain language, this equation tells us:
 
-1. For each query $q$ drawn from our dataset (or from a distribution $P(Q)$),
+1. For each query $q$ drawn from our dataset or from some distribution $P(Q)$,
 2. For each output sequence $o$ sampled from our policy given $q$,
 	- Multiply the reward $r(q,o)$ by the gradient of the log-probability $\nabla_\theta \log \pi_\theta(o \mid q)$,
 	- And then average these products over many samples.
