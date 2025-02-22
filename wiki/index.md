@@ -22,8 +22,8 @@ $$
 \end{align}
 $$
 
-- **Section Navigation:** Jump directly to sections within your articles.
-- **GitHub Integration:** Seamlessly fetch and update content from GitHub.
+- **Section Navigation:** Jump directly to sections within your articles. Try it with the minimized menu on the lift.
+- **GitHub Integration:** Seamlessly fetch and update content from GitHub. You don't need to host articles or graphics on your server. Store and edit them in any public GitHub account.
 
 ### Image Embedding
 
@@ -48,15 +48,7 @@ def initialize_vocabulary(corpus):
     return vocabulary, charset
 ```
 
-### Advanced Math Example
-
-Display more complex mathematical expressions:
-
-$$
-E = \sqrt{mc^2}\frac{1}{3}
-$$
-
-### Data Tables
+### Tables
 
 Present data in structured tables:
 
@@ -71,6 +63,6 @@ Present data in structured tables:
 
 ## Usage
 
-Add your Markdown files to the GitHub repository and they'll be available via the wiki. The integrated search engine builds an index on your browser at first use and updates it incrementally when new articles are added.
+Upload a static `index.html` to a public directory on your server (any directory under `public_html`), add your Markdown files to a GitHub repository and they'll become available on your server. The integrated search engine builds an index on your browser at first use and updates it incrementally when new articles are added.
 
-Happy wiki-ing with Iskra!
+Happy wikying with Iskra!
