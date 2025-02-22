@@ -1,5 +1,7 @@
 # Building the GRPO Algorithm from First Principles  
 
+(This is an incomplete draft, read on your own risk!)
+
 Mathematical reasoning is hard for language models. It demands both precise quantitative reasoning and careful multi-step problem-solving. A trained model can improve at math through **reinforcement learning** (RL). In this tutorial, we build **Group Relative Policy Optimization** (GRPO) from scratch—an RL algorithm designed to train language models on tasks with exact answers, such as coding, math, and logic. GRPO takes advantage of reasoning steps, where the model generates a chain of thought before answering, which has been shown to improve accuracy.  
 
 GRPO is a simplified version of **Proximal Policy Optimization** (PPO), an algorithm commonly used in **reinforcement learning from human feedback** (RLHF) to align models with user preferences. Unlike PPO, GRPO doesn't use a **critic model**, which simplifies training and reduces memory use. Instead of learning from a critic's estimated values, GRPO estimates baselines from groups of sampled outputs. This works well for math problems since rewards can be assigned by comparing the generated answer to the ground truth through string matching—eliminating the need for human feedback.
@@ -84,8 +86,6 @@ $$
 \text{Loss}(o_t) = -\Bigl( w(o_t)\,A(q,o_t) - \beta\, f(\Delta_t) \Bigr).
 $$
 
----
-
 ## 5. Final GRPO Loss Expression
 
 Averaging over all tokens in the generated output $o$ (and across multiple samples per prompt), the GRPO loss is given by:
@@ -95,8 +95,6 @@ $$
 $$
 
 where $N$ is the number of sampled outputs (often grouped by prompt). Minimizing this loss (or, equivalently, maximizing its negative) updates the policy to favor completions with high relative advantage while penalizing those that diverge too far from the reference model.
-
----
 
 ### 6. Summary
 
@@ -122,7 +120,3 @@ $$
 $$
 
 thereby ensuring that outputs which both yield high (relative) advantage and remain close to the reference model are reinforced. This is the core idea behind the GRPO loss used in our implementation.
-
---- 
-
-This complete derivation—mirroring the style and level of detail in the DeepSeek‐Math article—shows the motivation and mathematical steps leading to the composite learning signal used in GRPO.
