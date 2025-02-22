@@ -253,7 +253,7 @@ $$
 
 so subtracting $V(q)$ does not alter the expected gradient when averaged over the policy’s outputs. For this property to hold, the function $Q(q,o)$ must be chosen such that its expectation over the outputs equals the baseline $V(q)$; in other words, $V(q) = 𝔼_{o\sim\pi_\theta(O \mid q)}[Q(q,o)]$. This consistency ensures that using $A(q,o)$ instead of $r(q,o)$ results in an unbiased gradient estimate.
 
-### Why $𝔼_{o\sim\pi_\theta(O \mid q)}\Bigl[\nabla_\theta \log \pi_\theta(o \mid q)\Bigr] = 0$
+An attentive reader might wonder why $𝔼_{o\sim\pi_\theta(O \mid q)}\Bigl[\nabla_\theta \log \pi_\theta(o \mid q)\Bigr] = 0$. Let's see why.
 
 The property $𝔼_{o\sim\pi_\theta(O \mid q)}\Bigl[\nabla_\theta \log \pi_\theta(o \mid q)\Bigr] = 0$ is fundamental and comes from how probability distributions work. The key insight is that the sum (or integral) of probabilities over all possible outcomes equals 1, and this remains true as we change the parameters $\theta$.
 
