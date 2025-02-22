@@ -253,6 +253,66 @@ $$
 
 so subtracting $V(q)$ does not alter the expected gradient when averaged over the policy’s outputs. For this property to hold, the function $Q(q,o)$ must be chosen such that its expectation over the outputs equals the baseline $V(q)$; in other words, $V(q) = 𝔼_{o\sim\pi_\theta(O \mid q)}[Q(q,o)]$. This consistency ensures that using $A(q,o)$ instead of $r(q,o)$ results in an unbiased gradient estimate.
 
+### Why $𝔼_{o\sim\pi_\theta(O \mid q)}\Bigl[\nabla_\theta \log \pi_\theta(o \mid q)\Bigr] = 0$
+
+The property $𝔼_{o\sim\pi_\theta(O \mid q)}\Bigl[\nabla_\theta \log \pi_\theta(o \mid q)\Bigr] = 0$ is fundamental and comes from how probability distributions work. The key insight is that the sum (or integral) of probabilities over all possible outcomes equals 1, and this remains true as we change the parameters $\theta$.
+
+For any probability distribution $\pi_\theta$, we know:
+
+$$
+\sum_o \pi_\theta(o|q) = 1
+$$
+
+This sum is over all possible outputs $o$ for a given query $q$.
+
+Since this equality holds for all $\theta$, its derivative with respect to $\theta$ must be zero:
+
+$$
+\frac{\partial}{\partial \theta} \left[\sum_o \pi_\theta(o|q)\right] = \sum_o \frac{\partial}{\partial \theta}[\pi_\theta(o|q)] = 0
+$$
+
+This folows from a fundamental principle from calculus that states that if a quantity is always equal to a constant (in this case, 1), its derivative must be zero. Here's why.
+
+Let's say we have a function $f(\theta)$ that equals 1 for all values of $\theta$:
+   
+$$
+f(\theta) = 1 \quad \text{for all } \theta
+$$
+
+The derivative $\frac{d}{d\theta}f(\theta)$ measures how $f(\theta)$ changes as we make tiny changes to $\theta$, but $f(\theta)$ doesn't change at all (it's always 1!) mo matter what value of $\theta$ we pick, $f(\theta)$ stays at 1.
+
+Therefore, the rate of change must be zero:
+   
+$$
+\frac{d}{d\theta}f(\theta) = 0
+$$
+
+In our case, we have:
+
+$$
+\sum_o \pi_\theta(o|q) = 1 \quad \text{for all } \theta
+$$
+
+This is exactly like the situation above—the left side must equal 1 for any $\theta$ we choose (otherwise probabilities wouldn't sum to 1). Therefore, its derivative with respect to $\theta$ must be zero.
+
+This is a key property in probability theory: the sum of probabilities must always equal 1, so the derivative of this sum with respect to any parameter must be zero — otherwise, there would be some value of the parameter where probabilities don't sum to 1!
+
+Now, we are back to showing why $𝔼_{o\sim\pi_\theta(O \mid q)}\Bigl[\nabla_\theta \log \pi_\theta(o \mid q)\Bigr] = 0. Using the chain rule:
+
+$$
+\sum_o \pi_\theta(o|q) \cdot \frac{\partial}{\partial \theta}[\log \pi_\theta(o|q)] = 0
+$$
+
+This sum weighted by probabilities is exactly what an expectation is:
+
+$$
+\mathbb{E}_{o\sim\pi_\theta(O|q)}[\nabla_\theta \log \pi_\theta(o|q)] = 0
+$$
+
+This derivation is often referred to as the **score function property** and is a key step in the **likelihood ratio trick**, which is widely used in methods like policy gradient.
+
+---
+
 In this refined formulation, outputs that yield rewards higher than the expected baseline (i.e., a positive advantage) are reinforced, while those yielding lower-than-expected rewards (i.e., a negative advantage) are discouraged. This adjustment improves the assignment of credit to the generated outputs and reduces the variance in the gradient estimates, leading to a more stable learning process.
 
 This formulation, which leverages the difference between $Q(q,o)$ and $V(q)$ to compute the advantage, is a fundamental component of [actor-critic methods](actor-critic.md). In actor-critic approaches, the policy $\pi_\theta$ (the actor) selects outputs, while a separate mechanism (the critic) estimates $V(q)$. The critic’s evaluation provides the necessary information to calculate the advantage, thereby guiding the policy updates more effectively.
