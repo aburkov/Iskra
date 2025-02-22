@@ -85,7 +85,7 @@ Now that we have derived the gradient of our objective with respect to the polic
 The REINFORCE algorithm is a **Monte Carlo policy gradient method**. "Monte Carlo" here means that we estimate our expected values by sampling. In our case, rather than summing over all possible outputs (which would be impossible in most practical scenarios), we sample outputs from our policy and use these samples to estimate the expectation. The key observation from our derivation is that the gradient of the objective is:
 
 $$
-\nabla_\theta J(\theta) = \mathbb{E}_{q\sim P(q),\, o \sim \pi_\theta(\cdot \mid q)}\Bigl[r(q,o)\nabla_\theta \log \pi_\theta(o \mid q)\Bigr]
+\nabla_\theta J(\theta) = 𝔼_{q\sim P(q),\, o \sim \pi_\theta(\cdot \mid q)}\Bigl[r(q,o)\nabla_\theta \log \pi_\theta(o \mid q)\Bigr]
 $$
 
 In plain language, this equation tells us:
@@ -214,7 +214,7 @@ Here's what's going on in line ➊:
 In the basic REINFORCE formulation, the policy gradient update is expressed as
 
 $$
-\nabla_\theta J(\theta) = \mathbb{E}_{q\sim P(q),\, o\sim \pi_\theta(\cdot \mid q)}\Bigl[r(q,o) \, \nabla_\theta \log \pi_\theta(o \mid q)\Bigr],
+\nabla_\theta J(\theta) = 𝔼_{q\sim P(q),\, o\sim \pi_\theta(\cdot \mid q)}\Bigl[r(q,o) \, \nabla_\theta \log \pi_\theta(o \mid q)\Bigr],
 $$
 
 where $r(q,o)$ denotes the reward obtained after generating the complete output $o$ in response to the query $q$.
@@ -222,7 +222,7 @@ where $r(q,o)$ denotes the reward obtained after generating the complete output 
 Using the raw reward $r(q,o)$ directly can result in gradient estimates with high variance. An improved strategy refines this update by comparing the received reward with an expected reward for the query. This comparison can enabled by considering two functions. The first is the **action-value function** $Q(q,o)$, which represents the expected reward when generating the specific output $o$ in response to $q$. The second is the **value function** $V(q)$, which estimates the expected reward for the query $q$ over all possible outputs, serving as a **baseline**. In many implementations of policy gradient methods that incorporate value estimation, $V(q)$ is defined as
 
 $$
-V(q) = \mathbb{E}_{o\sim\pi_\theta(\cdot \mid q)}\bigl[Q(q,o)\bigr]
+V(q) = 𝔼_{o\sim\pi_\theta(\cdot \mid q)}\bigl[Q(q,o)\bigr]
 $$
 
 The difference between these two functions,
@@ -236,16 +236,16 @@ is called the **advantage**. The advantage indicates how much better or worse th
 Replacing the reward $r(q,o)$ with the advantage $A(q,o)$ in the gradient update yields
 
 $$
-\nabla_\theta J(\theta) \approx \mathbb{E}_{q\sim P(q),\, o\sim \pi_\theta(\cdot \mid q)}\Bigl[A(q,o) \, \nabla_\theta \log \pi_\theta(o \mid q)\Bigr].
+\nabla_\theta J(\theta) \approx 𝔼_{q\sim P(q),\, o\sim \pi_\theta(\cdot \mid q)}\Bigl[A(q,o) \, \nabla_\theta \log \pi_\theta(o \mid q)\Bigr].
 $$
 
 When the baseline $V(q)$ is independent of the output $o$, the expected gradient remains unchanged. This is because
 
 $$
-\mathbb{E}_{o\sim\pi_\theta(\cdot \mid q)}\Bigl[V(q) \, \nabla_\theta \log \pi_\theta(o \mid q)\Bigr] = V(q) \, \mathbb{E}_{o\sim\pi_\theta(\cdot \mid q)}\Bigl[\nabla_\theta \log \pi_\theta(o \mid q)\Bigr] = 0,
+𝔼_{o\sim\pi_\theta(\cdot \mid q)}\Bigl[V(q) \, \nabla_\theta \log \pi_\theta(o \mid q)\Bigr] = V(q) \, 𝔼{E}_{o\sim\pi_\theta(\cdot \mid q)}\Bigl[\nabla_\theta \log \pi_\theta(o \mid q)\Bigr] = 0,
 $$
 
-so subtracting $V(q)$ does not alter the expected gradient when averaged over the policy’s outputs. For this property to hold, the function $Q(q,o)$ must be chosen such that its expectation over the outputs equals the baseline $V(q)$; in other words, $V(q) = \mathbb{E}_{o\sim\pi_\theta(\cdot \mid q)}[Q(q,o)]$. This consistency ensures that using $A(q,o)$ instead of $r(q,o)$ results in an unbiased gradient estimate.
+so subtracting $V(q)$ does not alter the expected gradient when averaged over the policy’s outputs. For this property to hold, the function $Q(q,o)$ must be chosen such that its expectation over the outputs equals the baseline $V(q)$; in other words, $V(q) = 𝔼_{o\sim\pi_\theta(\cdot \mid q)}[Q(q,o)]$. This consistency ensures that using $A(q,o)$ instead of $r(q,o)$ results in an unbiased gradient estimate.
 
 In this refined formulation, outputs that yield rewards higher than the expected baseline (i.e., a positive advantage) are reinforced, while those yielding lower-than-expected rewards (i.e., a negative advantage) are discouraged. This adjustment improves the assignment of credit to the generated outputs and reduces the variance in the gradient estimates, leading to a more stable learning process.
 
