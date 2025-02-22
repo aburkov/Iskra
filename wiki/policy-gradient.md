@@ -112,7 +112,7 @@ This average gives us an **unbiased estimate** of the true gradient. "Unbiased" 
 Using this gradient estimate, we can update the policy parameters $\theta$ in a way that is similar to other gradient ascent methods. In gradient ascent, we adjust the parameters to increase our objective $J(\theta)$. The update rule is:
 
 $$
-\theta \leftarrow \theta + \alpha \, \hat{g}
+\theta \leftarrow \theta + \alpha \hat{g}
 $$
 
 where:
