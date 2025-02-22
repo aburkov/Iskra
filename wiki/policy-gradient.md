@@ -85,7 +85,7 @@ Now that we have derived the gradient of our objective with respect to the polic
 The REINFORCE algorithm is a **Monte Carlo policy gradient method**. "Monte Carlo" here means that we estimate our expected values by sampling. In our case, rather than summing over all possible outputs (which would be impossible in most practical scenarios), we sample outputs from our policy and use these samples to estimate the expectation. The key observation from our derivation is that the gradient of the objective is:
 
 $$
-\nabla_\theta J(\theta) = 𝔼_{q\sim P(q),\, o \sim \pi_\theta(\cdot \mid q)}\Bigl[r(q,o)\nabla_\theta \log \pi_\theta(o \mid q)\Bigr]
+\nabla_\theta J(\theta) = 𝔼_{q\sim P(q), o \sim \pi_\theta(\cdot \mid q)}\Bigl[r(q,o)\nabla_\theta \log \pi_\theta(o \mid q)\Bigr]
 $$
 
 In plain language, this equation tells us:
